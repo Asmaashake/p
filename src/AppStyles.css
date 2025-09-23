@@ -1,0 +1,125 @@
+.App {
+  text-align: center;
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+@import url('https://fonts.googleapis.com/css2?family=An+Nahar&display=swap');
+
+body {
+  font-family: 'AnNahar', sans-serif;
+  background-color: #f5f5f5;
+  margin: 0;
+  padding: 0;
+}
+
+.ant-layout {
+  font-family: 'AnNahar', sans-serif;
+}
+
+.custom-sider {
+  background-color: #522524;
+  color: white;
+  text-align: center;
+  padding: 20px;
+  font-size: 20px;
+}
+
+.custom-header {
+  background-color: #fff;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 20px;
+}
+
+.custom-header h2 {
+  color: #522524;
+  font-family: 'AnNahar';
+}
+
+.custom-btn {
+  background-color: #522524;
+  border-color: #522524;
+  color: #fff;
+  font-family: 'AnNahar';
+}
+
+.custom-btn-default {
+  color: #522524;
+  border-color: #522524;
+}
+
+.custom-card {
+  border-top: 3px solid #522524;
+  font-family: 'AnNahar';
+}
+
+.custom-card h3 {
+  color: #522524;
+}
+
+.custom-search .ant-input {
+  border-color: #522524;
+}
+
+.login-content {
+  width: 400px;
+  background: #fff;
+  padding: 24px;
+  border-radius: 8px;
+  border-top: 5px solid #522524;
+}
+
+.login-content h2 {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #522524;
+}
+
+.login-input .ant-input, .login-input .ant-input-password {
+  border-color: #522524;
+}
+
+.login-btn {
+  background-color: #522524;
+  border-color: #522524;
+  color: #fff;
+}
+
+.login-link {
+  color: #522524;
+}
+
