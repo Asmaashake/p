@@ -63,14 +63,14 @@ export default function Dashboard() {
   };
 
   const columns1 = [
-    { title: "Name", dataIndex: "name", key: "name" },
-    { title: "Email", dataIndex: "email", key: "email" },
-    { title: "City", dataIndex: "city", key: "city" },
+    { title: "الاسم ", dataIndex: "name", key: "name" },
+    { title: "الايميل", dataIndex: "email", key: "email" },
+    { title: "المهنة", dataIndex: "city", key: "city" },
   ];
 
   const columns2 = [
-    { title: "Title", dataIndex: "title", key: "title" },
-    { title: "Body", dataIndex: "body", key: "body" },
+    { title: "الاسم ", dataIndex: "title", key: "title" },
+    { title: "العمل", dataIndex: "body", key: "body" },
   ];
 
   const switchTable = (table)=>{
@@ -80,20 +80,30 @@ export default function Dashboard() {
   };
 
   const cards = [
-    { icon:<UserOutlined style={{fontSize:30,color:"#522524"}}/>, title:"Users", description:"Manage your users."},
-    { icon:<LockOutlined style={{fontSize:30,color:"#522524"}}/>, title:"Security", description:"Keep your data safe."},
-    { icon:<MailOutlined style={{fontSize:30,color:"#522524"}}/>, title:"Messages", description:"Check notifications."},
-    { icon:<InfoCircleOutlined style={{fontSize:30,color:"#522524"}}/>, title:"Analytics", description:"Visualize data."}
+    { icon:<UserOutlined style={{fontSize:30,color:"#522524"}}/>, title:"معدل استجابة المدربين", description:"20%"},
+    { icon:<UserOutlined style={{fontSize:30,color:"#522524"}}/>, title:"معدل استجابة المتدربين ", description:"40%"},
+    { icon:<InfoCircleOutlined style={{fontSize:30,color:"#522524"}}/>, title:"اجمالي المدربين", description:"4"},
+    { icon:<InfoCircleOutlined style={{fontSize:30,color:"#522524"}}/>, title:"اجمالي المتدربين", description:"5"}
   ];
 
   return (
     <Layout style={{ minHeight: "100vh" }}>
-      <Sider className="custom-sider">Logo</Sider>
+      <Sider className="custom-sider">الوطنية للتدريب والتشغيل </Sider>
 
       <Layout>
         <Header className="custom-header">
-          <h2>My Dashboard</h2>
-          <Button type="default" className="custom-btn-default" onClick={() => { localStorage.removeItem("isLoggedIn"); navigate("/"); }}>Back</Button>
+          <h2>لوحة التحكم الادارية</h2>
+         <Button 
+  type="default" 
+  className="custom-btn-default" 
+  onClick={() => {
+    localStorage.removeItem("isLoggedIn"); // لو بدك يمسح جلسة الدخول
+    navigate("/"); // ← يرجع على login
+  }}
+>
+  العودة
+</Button>
+
         </Header>
 
         <Content style={{ margin:"20px" }}>
@@ -116,11 +126,11 @@ export default function Dashboard() {
             </Row>
 
             <Space style={{ marginBottom:20 }} className="custom-search">
-              <Button className="custom-btn" type={activeTable==="table1"?"primary":"default"} onClick={()=>switchTable("table1")}>Table 1</Button>
-              <Button className="custom-btn" type={activeTable==="table2"?"primary":"default"} onClick={()=>switchTable("table2")}>Table 2</Button>
-              <Button onClick={activeTable==="table1"?fetchData1:fetchData2} className="custom-btn">Reload Data</Button>
+              <Button className="custom-btn" type={activeTable==="table1"?"primary":"default"} onClick={()=>switchTable("table1")}>بيانات المتدربين</Button>
+              <Button className="custom-btn" type={activeTable==="table2"?"primary":"default"} onClick={()=>switchTable("table2")}>بيانات المتدربين</Button>
+              <Button onClick={activeTable==="table1"?fetchData1:fetchData2} className="custom-btn">اعادة تحميل البيانات</Button>
               <Search
-                placeholder={activeTable==="table1"?"Search by name":"Search by title"}
+                placeholder={activeTable==="table1"?"البحث من خلال الاسم":"البحث من خلال الاسم"}
                 allowClear
                 onSearch={onSearch}
                 value={searchText}

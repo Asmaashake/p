@@ -18,25 +18,26 @@ export default function Login() {
   };
 
   const handleForgotPassword = () => {
-    setForgotMessage(`Username: ${loginData.username}, Password: ${loginData.password}`);
+    setForgotMessage(`الرقم الوطني: ${loginData.username}, كلمة المرور : ${loginData.password}`);
   };
 
   return (
     <Layout style={{ minHeight: "100vh", justifyContent: "center", alignItems: "center" }}>
       <Content className="login-content">
-        <h2>Login</h2>
+        <h2>تسجيل دخول الاداريين</h2>
         <Form name="loginForm" layout="vertical" onFinish={onFinish}>
-          <Form.Item label="Username" name="username" className="login-input">
-            <Input placeholder="Enter username" />
+          <Form.Item label="الرقم الوطني " name="username" className="login-input">
+            <Input placeholder="ادخل الرقم الوطني" />
           </Form.Item>
-          <Form.Item label="Password" name="password" className="login-input">
-            <Input.Password placeholder="Enter password" />
-          </Form.Item>
-          <Form.Item>
-            <Button htmlType="submit" block className="login-btn">Login</Button>
+          <Form.Item label="كلمة المرور " name="password" className="login-input">
+            <Input.Password placeholder="ادخل كلمة المرور " />
           </Form.Item>
           <Form.Item>
-            <Button type="link" onClick={handleForgotPassword} className="login-link">Forgot Password?</Button>
+            <Button htmlType="submit" block className="login-btn"  onClick={() => { navigate("/dashboard"); // ← يرجع على login
+  }}>تسجيل لوحة الدخول</Button>
+          </Form.Item>
+          <Form.Item>
+            <Button type="link" onClick={handleForgotPassword} className="login-link">نسيت كلمة المرور </Button>
           </Form.Item>
           {forgotMessage && <Text type="warning">{forgotMessage}</Text>}
         </Form>
