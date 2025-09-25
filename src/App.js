@@ -1,24 +1,23 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import Login from "./Login";
-import Dashboard from "./Dashboard";
+import Dashboard from "./Dash";
 import './AppStyles.css';
 
 export default function App() {
-  const isLoggedIn = localStorage.getItem("isLoggedIn");
-
-  return (
+const isLoggedIn = localStorage.getItem("isLoggedIn");
+return (
     <Router>
-      <Routes>
+    <Routes>
         <Route
-          path="/"
-          element={isLoggedIn ? <Navigate to="/dashboard" /> : <Login />}
+        path="/"
+        element={ <Login />}
         />
         <Route
-          path="/dashboard"
-          element={isLoggedIn ? <Dashboard /> : <Navigate to="/" />}
+        path="/dash"
+        element={isLoggedIn ? <Dashboard /> : <Navigate to="/" />}
         />
-      </Routes>
+    </Routes>
     </Router>
-  );
+);
 }
