@@ -9,16 +9,20 @@ const { Content } = Layout;
 const { Text } = Typography;
 
 export default function Login() {
-const [loginData, setLoginData] = useState({ username: "", password: "" });
+
+    const [loginData, setLoginData] = useState({ username: "2000200012", password: "ashsh$12" });
 const [forgotMessage, setForgotMessage] = useState("");
 const navigate = useNavigate();
-
 const onFinish = (values) => {
-    console.log("Login Data:", values);
-    setLoginData(values);
+    console.log("Login Data:", loginData); // يطبع الـ state الحالية
+    // التحقق من الثوابت
+    if (loginData.username === "2000200012" && loginData.password === "ashsh$12") {
     localStorage.setItem("isLoggedIn", true);
-    navigate("/dash");  };
-
+    navigate("/dash");
+    } else {
+    alert("الرقم الوطني أو كلمة المرور غير صحيحة");
+    }
+};
 const handleForgotPassword = () => {
     setForgotMessage(`الرقم الوطني:${loginData.username},كلمة المرور :${loginData.password}`);
 };

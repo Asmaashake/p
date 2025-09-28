@@ -12,7 +12,8 @@ return (
         <Route
         path="/"
         element={ <Login />}
-        />
+            />
+    
         <Route
         path="/dash"
         element={isLoggedIn ? <Dashboard /> : <Navigate to="/" />}
