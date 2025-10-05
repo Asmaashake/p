@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import "../AppStyles.css";
-export default function TrainingForm() {
+export default function Form2() {
 const [traineeName, setTraineeName] = useState("");
 const [selectedProfession, setSelectedProfession] = useState("");
 const [evaluation, setEvaluation] = useState("");
@@ -24,7 +24,7 @@ const questions = [
     { question: "يتوفر في القاعات ادوات التدريب اللازمة لشرح المادة النظرية؟تقييم البيئة التدريبية",   options: ["ضعيف", "جيد", "جيد جدا","ممتاز"]},
     { question: "حجم القاعات الصفية يتناسب مع عدد المتدربين؟تقييم البيئة التدريبية", options: ["ضعيف", "جيد", "جيد جدا", "ممتاز"] },
     { question: "يتم تقييد بارتداء معدات السلامة المهنية التي تخص مهنتك أثناء التدريب العملي؟تقييم البيئة التدريبية",   options: ["ضعيف", "جيد", "جيد جدا","ممتاز"]},
-    { question: "؟",  options: ["ضعيف", "جيد", "جيد جدا","ممتاز"] }, 
+    , 
     ];
     const trainingCenters = [
     "الحسينية",
@@ -89,9 +89,11 @@ return (
             style={{ width: `${(completedCount / totalCount) * 100}%` }}
         ></div>
         </div>
-
+            <img src="https://tse4.mm.bing.net/th/id/OIP.HEil-u4k_qmvxrr4fbu2OAAAAA?pid=Api&P=0&h=220" alt="National Employment & training" style={{ width:'700px'}} />
         {/* اسم المتدرب */}
-        <div className={`card ${traineeName ? "answered" : ""}`}>
+            <div className={`card ${traineeName ? "answered" : ""}`}>
+            <h1> استبيان رضا المتدرب في مرحلة التدريب المهني/ 32د</h1>
+
         <label>
             اسم المتدرب <span className="required">*</span>
         </label>
@@ -148,22 +150,22 @@ return (
         </div>
          {/* المعهد التدريبي */}
         <div className={`card ${trainingCenter ? "answered" : ""}`}>
-          <h3>
+        <h3>
             اسم المعهد التدريبي <span className="required">*</span>
-          </h3>
-          {trainingCenters.map((center, index) => (
+        </h3>
+        {trainingCenters.map((center, index) => (
             <label key={index} className="radio-label">
-              <input
+            <input
                 type="radio"
                 name="trainingCenter"
                 value={center}
                 checked={trainingCenter === center}
                 onChange={(e) => setTrainingCenter(e.target.value)}
                 required
-              />
-              {center}
+            />
+            {center}
             </label>
-          ))}
+        ))}
         </div>
         {/* التقييم */}
         <div className={`card ${evaluation ? "answered" : ""}`}>
@@ -185,7 +187,7 @@ return (
         ))}
         </div>
 
-        {/* الأسئلة السبعة */}
+        {/* الأسئلة  */}
         {questions.map((q, index) => (
         <div
             key={index}

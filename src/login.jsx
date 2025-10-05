@@ -10,13 +10,13 @@ const { Text } = Typography;
 
 export default function Login() {
 
-    const [loginData, setLoginData] = useState({ username: "2000200012", password: "ashsh$12" });
+const [loginData, setLoginData] = useState({ username: "2000200012", password: "12345$as"});
 const [forgotMessage, setForgotMessage] = useState("");
 const navigate = useNavigate();
 const onFinish = (values) => {
     console.log("Login Data:", loginData); // يطبع الـ state الحالية
     // التحقق من الثوابت
-    if (loginData.username === "2000200012" && loginData.password === "ashsh$12") {
+    if (loginData.username === "2000200012" && loginData.password === "12345$as") {
     localStorage.setItem("isLoggedIn", true);
     navigate("/dash");
     } else {
@@ -28,8 +28,9 @@ const handleForgotPassword = () => {
 };
 
 return (
-    <Layout style={{ minHeight: "50vh", justifyContent: "center", alignItems: "center", paddingTop:"50px" }}>
-    <Content className="login-content">
+    <Layout style={{ minHeight: "53vh", justifyContent: "center", alignItems: "center", paddingTop:"45px" }}>
+        <Content className="login-content">
+        <h2>منصة تقييم التدريب المهني</h2>
         <h2>تسجيل دخول الاداريين</h2>
             <Form  name="loginForm" layout="vertical" onFinish={onFinish} onSubmit={(event) => { event.preventDefault(); console.log(loginData) }}>
                 <img   src="https://tse4.mm.bing.net/th/id/OIP.HEil-u4k_qmvxrr4fbu2OAAAAA?pid=Api&P=0&h=220" alt="National Employment & training"/>
@@ -50,7 +51,7 @@ return (
                 <Form.Item>
                     
                     <Button type="link" onClick={handleForgotPassword} className="login-link">نسيت كلمة المرور </Button>
-                    <Button htmlType="submit" block className="login-btn"  >تسجيل لوحة الدخول</Button>
+                    <Button htmlType="submit" block className="login-btn"  >دخول لوحة التحكم </Button>
         </Form.Item>
                 <Form.Item>
                     <Anachor/>

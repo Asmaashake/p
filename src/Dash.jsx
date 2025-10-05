@@ -9,14 +9,16 @@ const { Search } = Input;
 const { Option } = Select;
 const { Text } = Typography;
 import { Progress } from "antd";
+import Ai from './component/Ai';
 
 // تعريف البطاقات مع نوعها (percentage أو number)
  const cards = [
-    { icon:<UserOutlined style={{fontSize:30,color:"#522524"}}/>, title:"معدل استجابة المدربين", description:"20%" },
+    { icon:<UserOutlined style={{fontSize:30,color:"#522524"}}/>, title:"معدل استجابة المدربين", description:"60%" },
     { icon:<UserOutlined style={{fontSize:30,color:"#522524"}}/>, title:"معدل استجابة المتدربين ", description:"40%"},
-    { icon:<UserOutlined style={{fontSize:30,color:"#522524"}}/>, title:"اجمالي المدربين", description:"4"},
+    { icon:<UserOutlined style={{fontSize:30,color:"#522524"}}/>, title:"اجمالي المدربين", description:"20"},
     { icon:<UserOutlined style={{fontSize:30,color:"#522524"}}/>, title:"اجمالي المتدربين", description:"10"}
-  ];
+];
+  
 
 
 const Institute = [
@@ -39,12 +41,13 @@ export default function Dashboard() {
   const [data1, setData1] = useState([]);
   const [data2, setData2] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
+  const [selectedSurveyStatus, setSelectedSurveyStatus] = useState(null);
+
   const [loading, setLoading] = useState(false);
   const [searchText, setSearchText] = useState("");
   const [activeTable, setActiveTable] = useState("table1");
   const [selectedJob, setSelectedJob] = useState(null);
   const [selectedCenter, setSelectedCenter] = useState(null);
-
   const fetchData1 = () => {
     setLoading(true);
     axios.get("https://jsonplaceholder.typicode.com/users")
@@ -52,11 +55,17 @@ export default function Dashboard() {
         const formatted = res.data.map(u => ({
           key: u.id,
           name: u.name,
+          phone:"9627"+Math.floor(10000000+Math.random()*90000000),
+          id:"32",
           email: u.email,
           city: u.address.city,
           job: professions[Math.floor(Math.random() * professions.length)], // توزيع عشوائي
-          trainingCenter: Institute[Math.floor(Math.random() * Institute.length)]
+          trainingCenter: Institute[Math.floor(Math.random() * Institute.length)],
+          surveyStatus: Math.random() > 0.5 ? "مكتمل":"غير مكتمل",
+          
         }));
+          console.log("ارقام الهواتف", formatted.map(f => f.phone));
+
         setData1(formatted);
         if (activeTable === "table1") setFilteredData(formatted);
         setLoading(false);
@@ -70,12 +79,17 @@ export default function Dashboard() {
         const formatted = res.data.slice(0, 20).map(p => ({
           key: p.id,
           title: p.title,
+          phone:"9627"+Math.floor(10000000+Math.random()*90000000),
           body: p.body,
           email: "example@mail.com",
           job: professions[Math.floor(Math.random() * professions.length)],
           city: "عمان",
-          trainingCenter: Institute[Math.floor(Math.random() * Institute.length)]
+          trainingCenter: Institute[Math.floor(Math.random() * Institute.length)],
+                    surveyStatus: Math.random() > 0.5 ? "مكتمل":"غير مكتمل",
+
+          
         }));
+                  console.log("ارقام الهواتف", formatted.map(f => f.phone));
         setData2(formatted);
         if (activeTable === "table2") setFilteredData(formatted);
         setLoading(false);
@@ -83,32 +97,50 @@ export default function Dashboard() {
   };
 
   useEffect(() => {
-    fetchData1();
-    fetchData2();
-  }, []);
+  setFilteredData(activeTable === "table1" ? data1 : data2);
+}, [activeTable, data1, data2]);
 
-  const applyFilters = (value = searchText, job = selectedJob, center = selectedCenter) => {
-    let filtered = activeTable === "table1" ? data1 : data2;
 
-    // Search filter
-    filtered = filtered.filter(item =>
-      activeTable === "table1"
-        ? item.name.toLowerCase().includes(value.toLowerCase())
-        : item.title.toLowerCase().includes(value.toLowerCase())
-    );
+  const applyFilters = (
+  value = searchText, 
+  job = selectedJob, 
+  center = selectedCenter,
+  surveyStatus = selectedSurveyStatus
+) => {
+  let filtered = activeTable === "table1" ? data1 : data2;
 
-    // Job filter
-    if (job) {
-      filtered = filtered.filter(item => item.job === job);
-    }
+  // فلتر البحث
+  if (value) {
+    filtered = filtered.filter(item => {
+      if (activeTable === "table1") {
+        return item.name.toLowerCase().includes(value.toLowerCase()) ||
+               item.phone.includes(value);
+      } else {
+        return (item.title && item.title.toLowerCase().includes(value.toLowerCase())) ||
+               (item.phone && item.phone.includes(value));
+      }
+    });
+  }
 
-    // Training center filter
-    if (center) {
-      filtered = filtered.filter(item => item.trainingCenter === center);
-    }
+  // فلتر المهنة
+  if (job) {
+    filtered = filtered.filter(item => item.job === job);
+  }
 
-    setFilteredData(filtered);
-  };
+  // فلتر المعهد
+  if (center) {
+    filtered = filtered.filter(item => item.trainingCenter === center);
+  }
+
+  // فلتر حالة الاستبيان
+  if (surveyStatus) {
+    filtered = filtered.filter(item => item.surveyStatus === surveyStatus);
+  }
+
+  setFilteredData(filtered);
+};
+
+
 
   const onSearch = (value) => {
     setSearchText(value);
@@ -127,35 +159,58 @@ export default function Dashboard() {
 
   const columns1 = [
     { title: "الاسم ", dataIndex: "name", key: "name" },
+    {title: "رقم الهاتف", dataIndex: "phone", key: "phone" },
+    {title: "رقم الدفعة", dataIndex: "id", key: "id" },
     { title: "الايميل", dataIndex: "email", key: "email" },
-    { title: "المنطقة ", dataIndex: "city", key: "city" },
     { title: "المهنة", dataIndex: "job", key: "job" },
-    { title: "المعهد", dataIndex: "trainingCenter", key: "trainingCenter" }
+    { title: "المعهد", dataIndex: "trainingCenter", key: "trainingCenter" },
+    { 
+    title: "حالة الاستبيان", 
+    dataIndex: "surveyStatus", 
+    key: "surveyStatus",
+    render: (status) => status || "غير محدد"
+  }
   ];
 
   const columns2 = [
     { title: "الاسم ", dataIndex: "title", key: "title" },
     { title: "العمل", dataIndex: "body", key: "body" },
     { title: "الايميل", dataIndex: "email", key: "email" },
+    {title: "رقم الهاتف", dataIndex: "phone", key: "phone" },
     { title: "المهنة", dataIndex: "job", key: "job" },
     { title: "المنطقة", dataIndex: "city", key: "city" },
-    { title: "المعهد", dataIndex: "trainingCenter", key: "trainingCenter" }
+    { title: "المعهد", dataIndex: "trainingCenter", key: "trainingCenter" },
+    { 
+    title: "حالة الاستبيان", 
+    dataIndex: "surveyStatus", 
+    key: "surveyStatus",
+    render: (status) => status || "غير محدد"
+  }
   ];
 
   const switchTable = (table) => {
-    setActiveTable(table);
-    setFilteredData(table === "table1" ? data1 : data2);
-    setSearchText("");
-    setSelectedJob(null);
-    setSelectedCenter(null);
-  };
+  setActiveTable(table);
+  setSearchText("");
+  setSelectedJob(null);
+  setSelectedCenter(null);
+};
+
 
   return (
-    <Layout style={{ minHeight: "100vh" }}>
-    <Sider className="custom-sider" style={{ textAlign: "center", fontSize: 18, fontWeight: "bold" }}>
-        <span style={{ color: "#16a82aff" }}>الوطنية</span>{" "}
-        <span style={{ color: "#c57978ff" }}> للتشغيل</span>{" "}
-      <span style={{ color: "#f6fa16ff" }}>والتدريب</span>
+    <Layout style={{  }}>
+    <Sider
+  width={300}  // مثال: 300px
+  className="custom-sider"
+  style={{ textAlign: "center", fontSize: 18, fontWeight: "bold", backgroundColor: "#522524" }}
+>
+
+        <span style={{ color: "#4abb33ff" }}>National</span>{" "}
+        <span style={{ color: "#b4513fff" }}> Employment </span>{" "}
+        <span style={{ color: "#ddcc32ff" }}> &training</span>
+        <hr/>
+        
+        <span style={{ color: "#ffffffff" }}>Chat Ai </span>{" "}
+        <Ai />
       </Sider>
       <Layout>
         <Header className="custom-header">
@@ -165,11 +220,8 @@ export default function Dashboard() {
               localStorage.removeItem("isLoggedIn");
               navigate("/");
             }}>العودة</Button>
-          
-      
         </Header>
         {/* Cards */}
-          
           <Row gutter={[16,16]} style={{ marginBottom:30 }}>
               {cards.map((card,i)=>(
                 <Col xs={24} sm={12} md={6} key={i}>
@@ -185,11 +237,11 @@ export default function Dashboard() {
                 </Col>
               ))}
             </Row>
-        
-        <Content style={{ margin: "20px" }}>
+        <Content style={{ margin: "1px" }}>
           <div style={{ padding: 24, minHeight: 360, background: "#fff" }}>
 
             <Space style={{ marginBottom: 20 }} wrap className="custom-search">
+
               <Button className="custom-btn"
                 type={activeTable === "table1" ? "primary" : "default"}
                 onClick={() => switchTable("table1")}>بيانات المتدربين</Button>
@@ -199,14 +251,17 @@ export default function Dashboard() {
               <Button onClick={activeTable === "table1" ? fetchData1 : fetchData2} className="custom-btn">اعادة تحميل البيانات</Button>
 
               {/* Search */}
-              <Search
-                placeholder={activeTable === "table1" ? "البحث من خلال الاسم" : "البحث من خلال الاسم"}
-                allowClear
-                onSearch={onSearch}
-                value={searchText}
-                onChange={e => onSearch(e.target.value)}
-                style={{ width: 200 }}
-              />
+      
+            <Search
+  placeholder="البحث من خلال الاسم أو الرقم"
+  allowClear
+  onSearch={onSearch}
+  value={searchText}
+  onChange={e => onSearch(e.target.value)}
+  style={{ width: 200 }}
+/>
+
+
 
               {/* Select - المهنة */}
               <Select
@@ -233,9 +288,33 @@ export default function Dashboard() {
                   <Option key={i} value={inst}>{inst}</Option>
                 ))}
               </Select>
+              <Select
+  placeholder="اختر حالة الاستبيان"
+  style={{ width: 180 }}
+  allowClear
+  value={selectedSurveyStatus}
+  onChange={(value) => {
+    setSelectedSurveyStatus(value);
+    applyFilters(searchText, selectedJob, selectedCenter, value);
+  }}
+>
+  <Option value="مكتمل">مكتمل</Option>
+  <Option value="غير مكتمل">غير مكتمل</Option>
+</Select>
 
               {/* عدد السجلات */}
               <Text strong>عدد السجلات: {filteredData.length}</Text>
+            
+          <Button type="default" className="custom-btn"
+            onClick={() => {
+              localStorage.removeItem("isLoggedIn");
+              navigate("/form1");
+                }}>form1</Button>
+              <Button type="default" className="custom-btn"
+            onClick={() => {
+              localStorage.removeItem("isLoggedIn");
+              navigate("/form2");
+            }}>form2</Button>
             </Space>
 
             {loading ? <Spin size="large" /> : <Table dataSource={filteredData} columns={activeTable === "table1" ? columns1 : columns2} />}

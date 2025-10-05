@@ -47,13 +47,16 @@ body {
 
 .ant-layout {
   font-family: 'AnNahar', sans-serif;
+  
 }
 
 .custom-sider {
+  height: 1500px;
+  width: 2000px;
   background-color: #522524;
   color: white;
   text-align: center;
-  padding: 20px;
+  padding: 22px;
   font-size: 20px;
 }
 
@@ -78,12 +81,13 @@ body {
 }
 
 .custom-btn-default {
+  
   color: #522524;
   border-color: #522524;
 }
 
 .custom-card {
-  border-top: 3px solid #522524;
+  border-top: 10px solid #522524;
   font-family: 'AnNahar';
 }
 

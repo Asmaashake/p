@@ -3,6 +3,7 @@ import "./Dashboard.css";
 const [selectedInstitute, setSelectedInstitute] = useState("");
 const [selectedProfession, setSelectedProfession] = useState("");
 const Institute = [
+
     "الحسينية",
     "معهد الجفر",
     "معهد الرمثا",
