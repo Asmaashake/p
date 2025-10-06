@@ -1,40 +1,47 @@
 import React, { useEffect, useState } from "react";
-import { Layout, Button, Table, Spin, Input, Space, Card, Row, Col, Select, Typography } from "antd";
+import { ArrowLeftOutlined, ReloadOutlined } from "@ant-design/icons";
+import {
+  Layout, Button, Table, Spin, Input, Space, Card, Row, Col, Select, Typography, Tag
+} from "antd";
+const [exportActive, setExportActive] = useState(false);
+const [importActive, setImportActive] = useState(false);
+
 import axios from "axios";
-import { UserOutlined } from "@ant-design/icons";
+import { UserOutlined, CheckCircleOutlined, CloseCircleOutlined, ExclamationCircleOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 import './AppStyles.css';
-const { Header, Content, Footer, Sider } = Layout;
+import Ai from './component/Ai';
+
+const { Header, Content, Footer } = Layout;
 const { Search } = Input;
 const { Option } = Select;
 const { Text } = Typography;
-import { Progress } from "antd";
-import Ai from './component/Ai';
 
-// تعريف البطاقات مع نوعها (percentage أو number)
- const cards = [
-    { icon:<UserOutlined style={{fontSize:30,color:"#522524"}}/>, title:"معدل استجابة المدربين", description:"60%" },
-    { icon:<UserOutlined style={{fontSize:30,color:"#522524"}}/>, title:"معدل استجابة المتدربين ", description:"40%"},
-    { icon:<UserOutlined style={{fontSize:30,color:"#522524"}}/>, title:"اجمالي المدربين", description:"20"},
-    { icon:<UserOutlined style={{fontSize:30,color:"#522524"}}/>, title:"اجمالي المتدربين", description:"10"}
+// === البيانات المساعدة ===
+const cards = [
+  { icon: <UserOutlined style={{ fontSize: 30, color: "#522524" }} />, title: "معدل استجابة المدربين", description: "60%" },
+  { icon: <UserOutlined style={{ fontSize: 30, color: "#522524" }} />, title: "معدل استجابة المتدربين", description: "40%" },
+  { icon: <UserOutlined style={{ fontSize: 30, color: "#522524" }} />, title: "إجمالي المدربين", description: "20" },
+  { icon: <UserOutlined style={{ fontSize: 30, color: "#522524" }} />, title: "إجمالي المتدربين", description: "10" }
 ];
-  
-
 
 const Institute = [
-  "الحسينية","معهد الجفر","معهد الرمثا","معهد الريشة","معهد الزرقاء","معهد الطفيلة",
-  "معهد العقبة","معهد الكرك","معهد الكورة","معهد الموقر","معهد جرش","معهد ذيبان",
-  "معهد عجلون","معهد مادبا","معهد ماركا","معهد معان","معهد السرحان","العقبه/القويرة",
-  "رحاب","الصفاوي","مركز العقبة (HUB)","الرويشد","مشغل قرا بني هاشم"
+  "الحسينية", "معهد الجفر", "معهد الرمثا", "معهد الريشة", "معهد الزرقاء", "معهد الطفيلة",
+  "معهد العقبة", "معهد الكرك", "معهد الكورة", "معهد الموقر", "معهد جرش", "معهد ذيبان",
+  "معهد عجلون", "معهد مادبا", "معهد ماركا", "معهد معان", "معهد السرحان", "العقبة/القويرة",
+  "رحاب", "الصفاوي", "مركز العقبة (HUB)", "الرويشد", "مشغل قرا بني هاشم"
 ];
 
 const professions = [
-  "إدارة تزويد مأمور","التمديدات الصحية","تكييف وتبريد","حداد ألمنيوم","حداد فاصلون",
-  "دهان اثاث خشبي","دهان مباني / مجهز ديكورات جبسية","فني آلات صناعية","قصير , مركب قواطع جبس",
-  "كهربائي تمديدات منزلي وتحكم","كهربائي سيارات","لحام أنابيب","مركب خلايا طاقة شمسية",
-  "نجار أثاث","نجار طوبار , حداد تسليح","خياط نسائي","حلاق نسائي","بستنة عامة",
-  "خضراوات محمية","تسويق الكتروني","ميكانيك مركبات خفيفة"
+  "إدارة تزويد مأمور", "التمديدات الصحية", "تكييف وتبريد", "حداد ألمنيوم", "حداد فاصلون",
+  "دهان أثاث خشبي", "دهان مباني / مجهز ديكورات جبسية", "فني آلات صناعية", "قصير , مركب قواطع جبس",
+  "كهربائي تمديدات منزلي وتحكم", "كهربائي سيارات", "لحام أنابيب", "مركب خلايا طاقة شمسية",
+  "نجار أثاث", "نجار طوبار , حداد تسليح", "خياط نسائي", "حلاق نسائي", "بستنة عامة",
+  "خضراوات محمية", "تسويق الكتروني", "ميكانيك مركبات خفيفة"
 ];
+
+const gender = ["ذكر", "أنثى"];
+const surveyStatus = ["مكتمل", "غير مكتمل", "جزئي"];
 
 export default function Dashboard() {
   const navigate = useNavigate();
@@ -42,12 +49,13 @@ export default function Dashboard() {
   const [data2, setData2] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
   const [selectedSurveyStatus, setSelectedSurveyStatus] = useState(null);
-
   const [loading, setLoading] = useState(false);
   const [searchText, setSearchText] = useState("");
   const [activeTable, setActiveTable] = useState("table1");
   const [selectedJob, setSelectedJob] = useState(null);
   const [selectedCenter, setSelectedCenter] = useState(null);
+
+  // جلب البيانات للمتدربين
   const fetchData1 = () => {
     setLoading(true);
     axios.get("https://jsonplaceholder.typicode.com/users")
@@ -55,23 +63,22 @@ export default function Dashboard() {
         const formatted = res.data.map(u => ({
           key: u.id,
           name: u.name,
-          phone:"9627"+Math.floor(10000000+Math.random()*90000000),
-          id:"32",
-          email: u.email,
+          age: u.id + 18,
+          phone: "07" + Math.floor(10000000 + Math.random() * 90000000),
+          id: "32",
+          gender: gender[Math.floor(Math.random() * gender.length)],
           city: u.address.city,
-          job: professions[Math.floor(Math.random() * professions.length)], // توزيع عشوائي
+          job: professions[Math.floor(Math.random() * professions.length)],
           trainingCenter: Institute[Math.floor(Math.random() * Institute.length)],
-          surveyStatus: Math.random() > 0.5 ? "مكتمل":"غير مكتمل",
-          
+          surveyStatus: surveyStatus[Math.floor(Math.random() * surveyStatus.length)],
         }));
-          console.log("ارقام الهواتف", formatted.map(f => f.phone));
-
         setData1(formatted);
         if (activeTable === "table1") setFilteredData(formatted);
         setLoading(false);
       }).catch(() => setLoading(false));
   };
 
+  // جلب البيانات للمدربين
   const fetchData2 = () => {
     setLoading(true);
     axios.get("https://jsonplaceholder.typicode.com/posts")
@@ -79,17 +86,15 @@ export default function Dashboard() {
         const formatted = res.data.slice(0, 20).map(p => ({
           key: p.id,
           title: p.title,
-          phone:"9627"+Math.floor(10000000+Math.random()*90000000),
           body: p.body,
-          email: "example@mail.com",
+          phone: "077" + Math.floor(10000000 + Math.random() * 90000000),
+          age: p.id + 18,
+          gender: gender[Math.floor(Math.random() * gender.length)],
           job: professions[Math.floor(Math.random() * professions.length)],
           city: "عمان",
           trainingCenter: Institute[Math.floor(Math.random() * Institute.length)],
-                    surveyStatus: Math.random() > 0.5 ? "مكتمل":"غير مكتمل",
-
-          
+          surveyStatus: surveyStatus[Math.floor(Math.random() * surveyStatus.length)],
         }));
-                  console.log("ارقام الهواتف", formatted.map(f => f.phone));
         setData2(formatted);
         if (activeTable === "table2") setFilteredData(formatted);
         setLoading(false);
@@ -97,235 +102,248 @@ export default function Dashboard() {
   };
 
   useEffect(() => {
-  setFilteredData(activeTable === "table1" ? data1 : data2);
-}, [activeTable, data1, data2]);
+    setFilteredData(activeTable === "table1" ? data1 : data2);
+  }, [activeTable, data1, data2]);
 
-
-  const applyFilters = (
-  value = searchText, 
-  job = selectedJob, 
-  center = selectedCenter,
-  surveyStatus = selectedSurveyStatus
-) => {
-  let filtered = activeTable === "table1" ? data1 : data2;
-
-  // فلتر البحث
-  if (value) {
-    filtered = filtered.filter(item => {
-      if (activeTable === "table1") {
-        return item.name.toLowerCase().includes(value.toLowerCase()) ||
-               item.phone.includes(value);
-      } else {
-        return (item.title && item.title.toLowerCase().includes(value.toLowerCase())) ||
-               (item.phone && item.phone.includes(value));
-      }
-    });
-  }
-
-  // فلتر المهنة
-  if (job) {
-    filtered = filtered.filter(item => item.job === job);
-  }
-
-  // فلتر المعهد
-  if (center) {
-    filtered = filtered.filter(item => item.trainingCenter === center);
-  }
-
-  // فلتر حالة الاستبيان
-  if (surveyStatus) {
-    filtered = filtered.filter(item => item.surveyStatus === surveyStatus);
-  }
-
-  setFilteredData(filtered);
-};
-
-
-
-  const onSearch = (value) => {
-    setSearchText(value);
-    applyFilters(value, selectedJob, selectedCenter);
-  };
-
-  const onJobChange = (value) => {
-    setSelectedJob(value);
-    applyFilters(searchText, value, selectedCenter);
-  };
-
-  const onCenterChange = (value) => {
-    setSelectedCenter(value);
-    applyFilters(searchText, selectedJob, value);
+  const applyFilters = (value = searchText, job = selectedJob, center = selectedCenter, status = selectedSurveyStatus) => {
+    let filtered = activeTable === "table1" ? data1 : data2;
+    if (value) {
+      filtered = filtered.filter(item =>
+        (item.name?.toLowerCase().includes(value.toLowerCase()) || item.title?.toLowerCase().includes(value.toLowerCase()) || item.phone.includes(value))
+      );
+    }
+    if (job) filtered = filtered.filter(item => item.job === job);
+    if (center) filtered = filtered.filter(item => item.trainingCenter === center);
+    if (status) filtered = filtered.filter(item => item.surveyStatus === status);
+    setFilteredData(filtered);
   };
 
   const columns1 = [
-    { title: "الاسم ", dataIndex: "name", key: "name" },
-    {title: "رقم الهاتف", dataIndex: "phone", key: "phone" },
-    {title: "رقم الدفعة", dataIndex: "id", key: "id" },
-    { title: "الايميل", dataIndex: "email", key: "email" },
+    { title: "الاسم", dataIndex: "name", key: "name" },
+    { title: "رقم الهاتف", dataIndex: "phone", key: "phone" },
+    { title: "رقم الدفعة", dataIndex: "id", key: "id" },
+    { title: "العمر", dataIndex: "age", key: "age" },
+    { title: "النوع", dataIndex: "gender", key: "gender" },
     { title: "المهنة", dataIndex: "job", key: "job" },
     { title: "المعهد", dataIndex: "trainingCenter", key: "trainingCenter" },
-    { 
-    title: "حالة الاستبيان", 
-    dataIndex: "surveyStatus", 
-    key: "surveyStatus",
-    render: (status) => status || "غير محدد"
-  }
+    {
+      title: "حالة الاستبيان",
+      dataIndex: "surveyStatus",
+      key: "surveyStatus",
+      render: (status) => {
+        let color = "";
+
+        if (status === "مكتمل") color = "green";
+        else if (status === "غير مكتمل") color = "red";
+        else if (status === "جزئي") color = "gold";
+
+        return (
+          <span style={{ color: "black", display: "flex", alignItems: "center", gap: 5 }}>
+            <span
+              style={{
+                width: 12,
+                height: 12,
+                borderRadius: "50%",
+                backgroundColor: color,
+                display: "inline-block"
+              }}
+            />
+            {status}
+          </span>
+        );
+      }
+    }
+
   ];
 
   const columns2 = [
-    { title: "الاسم ", dataIndex: "title", key: "title" },
+    { title: "الاسم", dataIndex: "title", key: "title" },
     { title: "العمل", dataIndex: "body", key: "body" },
-    { title: "الايميل", dataIndex: "email", key: "email" },
-    {title: "رقم الهاتف", dataIndex: "phone", key: "phone" },
+    { title: "العمر", dataIndex: "age", key: "age" },
+    { title: "النوع", dataIndex: "gender", key: "gender" },
+    { title: "رقم الهاتف", dataIndex: "phone", key: "phone" },
     { title: "المهنة", dataIndex: "job", key: "job" },
     { title: "المنطقة", dataIndex: "city", key: "city" },
     { title: "المعهد", dataIndex: "trainingCenter", key: "trainingCenter" },
-    { 
-    title: "حالة الاستبيان", 
-    dataIndex: "surveyStatus", 
-    key: "surveyStatus",
-    render: (status) => status || "غير محدد"
-  }
+    {
+      title: "حالة الاستبيان",
+      dataIndex: "surveyStatus",
+      key: "surveyStatus",
+      render: (status) => {
+        let color = "";
+
+        if (status === "مكتمل") color = "green";
+        else if (status === "غير مكتمل") color = "red";
+        else if (status === "جزئي") color = "gold";
+
+        return (
+          <span style={{ color: "black", display: "flex", alignItems: "center", gap: 5 }}>
+            <span
+              style={{
+                width: 12,
+                height: 12,
+                borderRadius: "50%",
+                backgroundColor: color,
+                display: "inline-block"
+              }}
+            />
+            {status}
+          </span>
+        );
+      }
+    }
+
   ];
 
   const switchTable = (table) => {
-  setActiveTable(table);
-  setSearchText("");
-  setSelectedJob(null);
-  setSelectedCenter(null);
-};
+    setActiveTable(table);
+    setSearchText("");
+    setSelectedJob(null);
+    setSelectedCenter(null);
+  };
 
+  const buttonStyle = { backgroundColor: "#522524", color: "#fff", borderColor: "#522524" };
 
   return (
-    <Layout style={{  }}>
-    <Sider
-  width={300}  // مثال: 300px
-  className="custom-sider"
-  style={{ textAlign: "center", fontSize: 18, fontWeight: "bold", backgroundColor: "#522524" }}
->
-
-        <span style={{ color: "#4abb33ff" }}>National</span>{" "}
-        <span style={{ color: "#b4513fff" }}> Employment </span>{" "}
-        <span style={{ color: "#ddcc32ff" }}> &training</span>
-        <hr/>
-        
-        <span style={{ color: "#ffffffff" }}>Chat Ai </span>{" "}
-        <Ai />
-      </Sider>
+    <Layout style={{ textAlign: "right", direction: "rtl" }}>
       <Layout>
-        <Header className="custom-header">
-          <h2>لوحة التحكم الادارية</h2>
-          <Button type="default" className="custom-btn-default"
+        <Header
+          style={{
+            backgroundColor: "#ffff",
+            color: "#522524",
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            padding: "0 20px",
+          }}
+        >
+          <div style={{ display: "flex", alignItems: "left", gap: 10 }}>
+            <Button style={buttonStyle} onClick={() => navigate("/dash")}>لوحة التحكم الإدارية</Button>
+            <Button style={buttonStyle} onClick={() => navigate("/form1")}>إدارة الاستبيان</Button>
+          </div>
+
+          <Button
+            style={{ backgroundColor: "#522524", color: "#fff", borderRadius: "8px" }}
+            icon={<ArrowLeftOutlined />}
             onClick={() => {
               localStorage.removeItem("isLoggedIn");
               navigate("/");
-            }}>العودة</Button>
+            }}
+          >
+            العودة
+          </Button>
         </Header>
-        {/* Cards */}
-          <Row gutter={[16,16]} style={{ marginBottom:30 }}>
-              {cards.map((card,i)=>(
-                <Col xs={24} sm={12} md={6} key={i}>
-                  <Card hoverable className="custom-card">
-                    <div style={{ display:"flex", alignItems:"center", gap:16 }}>
-                      {card.icon}
-                      <div>
-                        <h3>{card.title}</h3>
-                        <p>{card.description}</p>
-                      </div>
+
+        <Content style={{ padding: 20 }}>
+          <Row><Ai /></Row>
+          <Row gutter={[16, 16]} style={{ marginBottom: 30 }}>
+            {cards.map((card, i) => (
+              <Col xs={24} sm={12} md={6} key={i}>
+                <Card hoverable className="custom-card">
+                  <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
+                    {card.icon}
+                    <div>
+                      <h3>{card.title}</h3>
+                      <p>{card.description}</p>
                     </div>
-                  </Card>
-                </Col>
-              ))}
-            </Row>
-        <Content style={{ margin: "1px" }}>
-          <div style={{ padding: 24, minHeight: 360, background: "#fff" }}>
+                  </div>
+                </Card>
+              </Col>
+            ))}
+          </Row>
 
-            <Space style={{ marginBottom: 20 }} wrap className="custom-search">
+          <Space style={{ marginBottom: 20 }} wrap>
+            <Button
+              onClick={activeTable === "table1" ? fetchData1 : fetchData2}
+              style={buttonStyle}
+              icon={<ReloadOutlined />}
+            />
 
-              <Button className="custom-btn"
-                type={activeTable === "table1" ? "primary" : "default"}
-                onClick={() => switchTable("table1")}>بيانات المتدربين</Button>
-              <Button className="custom-btn"
-                type={activeTable === "table2" ? "primary" : "default"}
-                onClick={() => switchTable("table2")}>بيانات المدربين</Button>
-              <Button onClick={activeTable === "table1" ? fetchData1 : fetchData2} className="custom-btn">اعادة تحميل البيانات</Button>
+            <Button
+              style={{
+                backgroundColor: activeTable === "table1" ? "#ffffff" : "#522524",
+                color: activeTable === "table1" ? "#522524" : "#ffffff",
+                border: "1px solid #522524",
+              }}
+              onClick={() => switchTable("table1")}
+            >
+              بيانات المتدربين
+            </Button>
 
-              {/* Search */}
-      
+            <Button
+              style={{
+                backgroundColor: activeTable === "table2" ? "#ffffff" : "#522524",
+                color: activeTable === "table2" ? "#522524" : "#ffffff",
+                border: "1px solid #522524",
+              }}
+              onClick={() => switchTable("table2")}
+            >
+              بيانات المدربين
+            </Button>
+
             <Search
-  placeholder="البحث من خلال الاسم أو الرقم"
-  allowClear
-  onSearch={onSearch}
-  value={searchText}
-  onChange={e => onSearch(e.target.value)}
-  style={{ width: 200 }}
-/>
+              placeholder="بحث بالاسم أو الرقم"
+              allowClear
+              onSearch={val => applyFilters(val)}
+              value={searchText}
+              onChange={e => applyFilters(e.target.value)}
+              style={{ width: 200 }}
+            />
 
+            <Select placeholder="اختر المهنة" style={{ width: 180 }} allowClear onChange={(v) => applyFilters(searchText, v)}>
+              {professions.map((job, i) => <Option key={i} value={job}>{job}</Option>)}
+            </Select>
 
+            <Select placeholder="اختر المعهد" style={{ width: 180 }} allowClear onChange={(v) => applyFilters(searchText, selectedJob, v)}>
+              {Institute.map((c, i) => <Option key={i} value={c}>{c}</Option>)}
+            </Select>
 
-              {/* Select - المهنة */}
-              <Select
-                placeholder="اختر المهنة"
-                style={{ width: 180 }}
-                allowClear
-                value={selectedJob}
-                onChange={onJobChange}
-              >
-                {professions.map((job, i) => (
-                  <Option key={i} value={job}>{job}</Option>
-                ))}
-              </Select>
+            <Select placeholder="اختر حالة الاستبيان" style={{ width: 180 }} allowClear onChange={(v) => applyFilters(searchText, selectedJob, selectedCenter, v)}>
+              {surveyStatus.map((s, i) => <Option key={i} value={s}>{s}</Option>)}
+            </Select>
 
-              {/* Select - المعهد */}
-              <Select
-                placeholder="اختر المعهد"
-                style={{ width: 200 }}
-                allowClear
-                value={selectedCenter}
-                onChange={onCenterChange}
-              >
-                {Institute.map((inst, i) => (
-                  <Option key={i} value={inst}>{inst}</Option>
-                ))}
-              </Select>
-              <Select
-  placeholder="اختر حالة الاستبيان"
-  style={{ width: 180 }}
-  allowClear
-  value={selectedSurveyStatus}
-  onChange={(value) => {
-    setSelectedSurveyStatus(value);
-    applyFilters(searchText, selectedJob, selectedCenter, value);
-  }}
->
-  <Option value="مكتمل">مكتمل</Option>
-  <Option value="غير مكتمل">غير مكتمل</Option>
-</Select>
+            <Text strong>عدد السجلات: {filteredData.length}</Text>
 
-              {/* عدد السجلات */}
-              <Text strong>عدد السجلات: {filteredData.length}</Text>
-            
-          <Button type="default" className="custom-btn"
-            onClick={() => {
-              localStorage.removeItem("isLoggedIn");
-              navigate("/form1");
-                }}>form1</Button>
-              <Button type="default" className="custom-btn"
-            onClick={() => {
-              localStorage.removeItem("isLoggedIn");
-              navigate("/form2");
-            }}>form2</Button>
-            </Space>
+            {/* أزرار تصدير واستيراد */}
+            <Button
+              style={{
+                backgroundColor: exportActive ? "#ffffff" : "#522524",
+                color: exportActive ? "#522524" : "#ffffff",
+                border: "1px solid #522524",
+              }}
+              onClick={() => {
+                setExportActive(true);
+                setImportActive(false);
+                alert("Export clicked");
+              }}
+            >
+              تصدير
+            </Button>
 
-            {loading ? <Spin size="large" /> : <Table dataSource={filteredData} columns={activeTable === "table1" ? columns1 : columns2} />}
-          </div>
+            <Button
+              style={{
+                backgroundColor: importActive ? "#ffffff" : "#522524",
+                color: importActive ? "#522524" : "#ffffff",
+                border: "1px solid #522524",
+              }}
+              onClick={() => {
+                setExportActive(false);
+                setImportActive(true);
+                alert("Import clicked");
+              }}
+            >
+              استيراد
+            </Button>
+          </Space>
+
+          {loading ? <Spin size="large" /> :
+            <Table dataSource={filteredData} columns={activeTable === "table1" ? columns1 : columns2} />}
         </Content>
 
-        <Footer style={{ textAlign: "center", fontFamily: "AnNahar" }}>
+        <Footer style={{ textAlign: "center" }}>
           Dashboard ©{new Date().getFullYear()}
         </Footer>
       </Layout>
     </Layout>
   );
 }
-

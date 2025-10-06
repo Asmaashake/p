@@ -25,7 +25,7 @@
 }
 
 .App-link {
-  color: #61dafb;
+  color: #522524;
 }
 
 @keyframes App-logo-spin {
@@ -87,7 +87,7 @@ body {
 }
 
 .custom-card {
-  border-top: 10px solid #522524;
+  border-top: 0px solid #522524;
   font-family: 'AnNahar';
 }
 
@@ -127,7 +127,7 @@ body {
 }
 
 .login-link {
-  color: #3041da;
+  color: #522524;
 }
 
 /* TrainingForm.css */
