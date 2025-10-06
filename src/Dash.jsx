@@ -3,8 +3,7 @@ import { ArrowLeftOutlined, ReloadOutlined } from "@ant-design/icons";
 import {
   Layout, Button, Table, Spin, Input, Space, Card, Row, Col, Select, Typography, Tag
 } from "antd";
-const [exportActive, setExportActive] = useState(false);
-const [importActive, setImportActive] = useState(false);
+
 
 import axios from "axios";
 import { UserOutlined, CheckCircleOutlined, CloseCircleOutlined, ExclamationCircleOutlined } from "@ant-design/icons";
@@ -203,8 +202,11 @@ export default function Dashboard() {
   };
 
   const buttonStyle = { backgroundColor: "#522524", color: "#fff", borderColor: "#522524" };
-
+const [exportActive, setExportActive] = useState(false);
+const [importActive, setImportActive] = useState(false);
   return (
+      
+
     <Layout style={{ textAlign: "right", direction: "rtl" }}>
       <Layout>
         <Header
