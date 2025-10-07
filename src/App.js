@@ -1,7 +1,7 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import Login from "./Login";
-import Dashboard from "./Dash";
+import Dashboard from "./Dashboard";
 import Form1 from './component/Form1';
 import Form2  from  './component/Form2';
 import './AppStyles.css';

@@ -3,7 +3,6 @@ import "./Dashboard.css";
 const [selectedInstitute, setSelectedInstitute] = useState("");
 const [selectedProfession, setSelectedProfession] = useState("");
 const Institute = [
-
     "الحسينية",
     "معهد الجفر",
     "معهد الرمثا",
@@ -27,7 +26,6 @@ const Institute = [
     "مركز العقبة (HUB)",
     "الرويشد",
     "مشغل قرا بني هاشم"
-    
 ];
 const professions = [
     "إدارة تزويد مأمور",
@@ -50,6 +48,5 @@ const professions = [
     "بستنة عامة",
     "خضراوات محمية",
     "تسويق الكتروني",
-    "ميكانيك مركبات خفيفة"
-        
+    "ميكانيك مركبات خفيفة" 
 ];
