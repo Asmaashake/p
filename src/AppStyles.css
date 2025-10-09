@@ -89,6 +89,9 @@ body {
 .custom-card {
   border-top: 0px solid #522524;
   font-family: 'AnNahar';
+  height: 150px; /* نفس ارتفاع كل الكاردات */
+  display: flex;
+  
 }
 
 .custom-card h3 {

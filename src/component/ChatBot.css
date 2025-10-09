@@ -1,3 +1,4 @@
+/* زر فتح وإغلاق الشات */
 .chat-toggle-btn {
   position: fixed;
   bottom: 20px;
@@ -11,8 +12,17 @@
   font-size: 24px;
   cursor: pointer;
   z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.3s ease;
 }
 
+.chat-toggle-btn:hover {
+  background-color: #703532;
+}
+
+/* نافذة الشات */
 .chat-popup {
   position: fixed;
   bottom: 80px;
@@ -20,25 +30,53 @@
   width: 300px;
   height: 600px;
   background-color: #fff;
-  border-radius: 10px;
-  box-shadow: 0 0 15px rgba(0,0,0,0.3);
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
   display: flex;
   flex-direction: column;
+  overflow: hidden;
   z-index: 1000;
 }
 
+/* رأس الشات */
+.chat-header {
+  background: #522524;
+  color: #fff;
+  text-align: center;
+  padding: 10px;
+  font-weight: bold;
+  font-size: 16px;
+  position: relative;
+}
+
+/* زر إغلاق داخل الهيدر */
+.chat-header-close-btn {
+  position: absolute;
+  top: 8px;
+  right: 10px;
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+/* الحاوية العامة */
 .chat-container {
   display: flex;
   flex-direction: column;
   height: 100%;
 }
 
+/* صندوق الرسائل */
 .chat-box {
   flex: 1;
   padding: 10px;
   overflow-y: auto;
+  background: #f9f9f9;
 }
 
+/* الرسائل */
 .message {
   padding: 8px 12px;
   margin-bottom: 10px;
@@ -59,13 +97,18 @@
   align-self: flex-start;
 }
 
+/* صندوق الإدخال */
 .input-box {
   display: flex;
+  align-items: center;
   padding: 10px;
   border-top: 1px solid #ccc;
-  
+  background: #fff;
+  position: sticky;
+  bottom: 0;
 }
 
+/* حقل الإدخال */
 .input-box input {
   flex: 1;
   padding: 8px;
@@ -75,8 +118,10 @@
   direction: ltr;
   color: #000;
   caret-color: #000;
+  font-size: 14px;
 }
 
+/* زر الإرسال */
 .input-box button {
   background: none;
   border: none;
@@ -85,4 +130,11 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  font-size: 18px;
+  color: #522524;
+  transition: transform 0.2s ease;
+}
+
+.input-box button:hover {
+  transform: scale(1.1);
 }

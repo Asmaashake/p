@@ -13,6 +13,7 @@ const TablesSwitcher = () => {
     >
       <Space style={{ marginBottom: 16 }}>
         <Button
+          
           style={{backgroundColor:"#522524",color:"#fff"}}
           type={activeTable === "trainees" ? "primary" : "default"}
           onClick={() => setActiveTable("trainees")}

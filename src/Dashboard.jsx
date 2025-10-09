@@ -93,15 +93,37 @@ export default function Dashboard() {
 
   useEffect(() => { fetchData1(); fetchData2(); }, []);
 
-  const applyFilters = ({ search, job, center, status }) => {
-    let data = activeTable === "table1" ? data1 : data2;
-    if (search) data = data.filter(d => (d.name?.toLowerCase().includes(search.toLowerCase()) || d.title?.toLowerCase().includes(search.toLowerCase()) || d.phone.includes(search)));
-    if (job) data = data.filter(d => d.job === job);
-    if (area) data = data.filter(d => d.area === area);
-    if(center) data = data.filter(d => d.trainingCenter === center);
-    if (status) data = data.filter(d => d.surveyStatus === status);
-    setFilteredData(data);
-  };
+  const applyFilters = ({ search, job, center, status, area: areaFilter }) => {
+  let data = activeTable === "table1" ? data1 : data2;
+
+  // بحث نصي
+  if (search && search.trim() !== "") {
+    data = data.filter(
+      (d) =>
+        d.name?.toLowerCase().includes(search.toLowerCase()) ||
+        d.title?.toLowerCase().includes(search.toLowerCase()) ||
+        d.phone.includes(search)
+    );
+  }
+
+  // فلترة المهنة
+  if (job && job !== "الكل") data = data.filter((d) => d.job === job);
+
+  // فلترة الإقليم
+  if (areaFilter && areaFilter !== "الكل")
+    data = data.filter((d) => d.area === areaFilter);
+
+  // فلترة المركز التدريبي
+  if (center && center !== "الكل")
+    data = data.filter((d) => d.trainingCenter === center);
+
+  // فلترة حالة الاستبيان
+  if (status && status !== "الكل")
+    data = data.filter((d) => d.surveyStatus === status);
+
+  setFilteredData(data);
+};
+
 
   const switchTable = (table) => {
     setActiveTable(table);
@@ -175,7 +197,7 @@ const columns2 = [
           setImportActive={setImportActive}
         />
 
-        <DataTable loading={loading} filteredData={filteredData} columns={columns1} />
+        <DataTable loading={loading} filteredData={filteredData} columns={columns1}  />
         
       </Content>
       <DashboardFooter />

@@ -76,9 +76,10 @@ export default function FiltersBar({
       <Text strong>عدد السجلات: {filteredData.length}</Text>
 
       <Button
+        
         style={{
-          backgroundColor: exportActive ? "#ffffff" : "#522524",
-          color: exportActive ? "#522524" : "#ffffff",
+          backgroundColor:"#522524",color:"#fff",
+
           border: "1px solid #522524",
         }}
         onClick={() => { setExportActive(true); setImportActive(false); alert("تم التصدير"); }}
@@ -88,8 +89,7 @@ export default function FiltersBar({
 
       <Button
         style={{
-          backgroundColor: importActive ? "#ffffff" : "#522524",
-          color: importActive ? "#522524" : "#ffffff",
+          backgroundColor:"#522524",color:"#fff",
           border: "1px solid #522524",
         }}
         onClick={() => { setExportActive(false); setImportActive(true); alert("تم الاستيراد"); }}
