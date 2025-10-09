@@ -22,7 +22,7 @@ const onFinish = (values) => {
     } else {
     alert("الرقم الوطني أو كلمة المرور غير صحيحة");
     }
-};
+    };
 const handleForgotPassword = () => {
     setForgotMessage(`الرقم الوطني:${loginData.username},كلمة المرور :${loginData.password}`);
 };
@@ -33,17 +33,23 @@ return (
         <h2>منصة تقييم التدريب المهني</h2>
         <h2>تسجيل دخول الاداريين</h2>
             <Form name="loginForm" layout="vertical" onFinish={onFinish}
-            style={{ textAlign: "right", direction: "rtl" }}    onSubmit={(event) => { event.preventDefault(); console.log(loginData) }}>
-                <img   src="https://tse4.mm.bing.net/th/id/OIP.HEil-u4k_qmvxrr4fbu2OAAAAA?pid=Api&P=0&h=220" alt="National Employment & training"/>
+                style={{ textAlign: "right", direction: "rtl" }}
+                
+                onSubmit={(event) => { event.preventDefault(); console.log(loginData) }}>
+                <img src="https://tse4.mm.bing.net/th/id/OIP.HEil-u4k_qmvxrr4fbu2OAAAAA?pid=Api&P=0&h=220"
+                    alt="National Employment & training" />
                 <Form.Item label="الرقم الوطني " name="username"
-            style={{textAlign:"right"}}        className="login-input" required rules={[{ required: true, message: 'الرجاء ادخال الرقم الوطني' }]} >
+                    
+                    style={{ textAlign: "right" }} className="login-input" 
+                    required rules={[{ required: true, message: 'الرجاء ادخال الرقم الوطني' }]} >
             <Input placeholder="ادخل الرقم الوطني"maxLength={10} value={loginData.username}
                     onChange={(event) => {
-                    setLoginData({...loginData, name: event.target.value, })
+                    setLoginData({...loginData, id: event.target.value, })
 
                         }} />
         </Form.Item>
-        <Form.Item label="كلمة المرور " name="password" className="login-input" required  rules={[{ required: true,message:'ادخال كلمة المرور المكونة من 8 وتحتوي على رمز خاص '}]}>
+                <Form.Item label="كلمة المرور " name="password" className="login-input" required
+                    rules={[{ required: true, message: 'ادخال كلمة المرور المكونة من 8 وتحتوي على رمز خاص ' }]}>
             <Input.Password placeholder="ادخل كلمة المرور " maxLength={8} value={loginData.password}
                     onChange={(event) => {
                     setLoginData({...loginData, password: event.target.value, })

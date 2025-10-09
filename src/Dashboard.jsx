@@ -8,28 +8,31 @@ import StatsCards from "./component/StatsCards";
 import FiltersBar from "./component/FiltersBar";
 import DataTable from "./component/DataTable";
 import DashboardFooter from "./component/DashboardFooter";
+import TraineesTable from "./component/TrainersTable";
+import TrainersTable from "./component/TraineesTable";
 
 const { Content } = Layout;
 
 // بيانات ثابتة
-const gender = ["ذكر", "أنثى"];
-const surveyStatus = ["مكتمل", "غير مكتمل", "جزئي"];
-const Institute = [
+const gender = ["الكل","ذكر", "أنثى"];
+const surveyStatus = ["الكل","مكتمل", "غير مكتمل", "جزئي"];
+const Institute = ["الكل",
   "الحسينية", "معهد الجفر", "معهد الرمثا", "معهد الريشة", "معهد الزرقاء", "معهد الطفيلة",
   "معهد العقبة", "معهد الكرك", "معهد الكورة", "معهد الموقر", "معهد جرش", "معهد ذيبان",
   "معهد عجلون", "معهد مادبا", "معهد ماركا", "معهد معان", "معهد السرحان", "العقبة/القويرة",
   "رحاب", "الصفاوي", "مركز العقبة (HUB)", "الرويشد", "مشغل قرا بني هاشم"
 ];
-const professions = [
+const professions = ["الكل",
   "إدارة تزويد مأمور", "التمديدات الصحية", "تكييف وتبريد", "حداد ألمنيوم", "حداد فاصلون",
   "دهان أثاث خشبي", "دهان مباني / مجهز ديكورات جبسية", "فني آلات صناعية",
   "كهربائي تمديدات منزلي وتحكم", "كهربائي سيارات", "نجار أثاث", "ميكانيك مركبات خفيفة"
 ];
+const area = ["الكل" ,"شمال","جنوب","شرق","غرب"];
 const cards = [
   { icon: <UserOutlined style={{ fontSize: 30, color: "#522524" }} />, title: "معدل استجابة المدربين", description: "60%" },
-  { icon: <UserOutlined style={{ fontSize: 30, color: "#522524" }} />, title: "معدل استجابة المتدربين", description: "40%" },
-  { icon: <UserOutlined style={{ fontSize: 30, color: "#522524" }} />, title: "إجمالي المدربين", description: "20" },
-  { icon: <UserOutlined style={{ fontSize: 30, color: "#522524" }} />, title: "إجمالي المتدربين", description: "10" }
+  { icon: <UserOutlined style={{ fontSize: 30, color: "#522524" }} />, title: "معدل استجابة المتدربين",description: "40%" },
+  { icon: <UserOutlined style={{ fontSize: 30, color: "#522524" }} />, title: "       إجمالي المدربين", description: "20 " },
+  { icon: <UserOutlined style={{ fontSize: 30, color: "#522524" }} />, title: "       إجمالي المتدربين",description: "10 " }
 ];
 
 export default function Dashboard() {
@@ -49,8 +52,10 @@ export default function Dashboard() {
         const formatted = res.data.map(u => ({
           key: u.id,
           name: u.name,
-          phone: "07" + Math.floor(10000000 + Math.random() * 90000000),
+          id:"32",
+          phone: "962" + Math.floor(10000000 + Math.random() * 90000000),
           age: u.id + 18,
+          area:area[Math.floor(Math.random() * area.length)],
           gender: gender[Math.floor(Math.random() * gender.length)],
           trainingCenter: Institute[Math.floor(Math.random() * Institute.length)],
           job: professions[Math.floor(Math.random() * professions.length)],
@@ -69,9 +74,11 @@ export default function Dashboard() {
       .then(res => {
         const formatted = res.data.slice(0, 20).map(p => ({
           key: p.id,
-          title: p.title,
-          phone: "07" + Math.floor(10000000 + Math.random() * 90000000),
+          name: p.name,
+            id:"32",
+          phone: "962" + Math.floor(10000000 + Math.random() * 90000000),
           age: p.id + 25,
+          area:area[Math.floor(Math.random() * area.length)],
           gender: gender[Math.floor(Math.random() * gender.length)],
           trainingCenter: Institute[Math.floor(Math.random() * Institute.length)],
           job: professions[Math.floor(Math.random() * professions.length)],
@@ -90,7 +97,8 @@ export default function Dashboard() {
     let data = activeTable === "table1" ? data1 : data2;
     if (search) data = data.filter(d => (d.name?.toLowerCase().includes(search.toLowerCase()) || d.title?.toLowerCase().includes(search.toLowerCase()) || d.phone.includes(search)));
     if (job) data = data.filter(d => d.job === job);
-    if (center) data = data.filter(d => d.trainingCenter === center);
+    if (area) data = data.filter(d => d.area === area);
+    if(center) data = data.filter(d => d.trainingCenter === center);
     if (status) data = data.filter(d => d.surveyStatus === status);
     setFilteredData(data);
   };
@@ -105,6 +113,8 @@ export default function Dashboard() {
     { title: "الاسم", dataIndex: "name", key: "name" },
     { title: "رقم الهاتف", dataIndex: "phone", key: "phone" },
     { title: "العمر", dataIndex: "age", key: "age" },
+    { title: "رقم الدفعة", dataIndex: "id", key: "id" },
+    {title:"اقليم",dataIndex:"area",key:"area"},
     { title: "النوع", dataIndex: "gender", key: "gender" },
     { title: "المهنة", dataIndex: "job", key: "job" },
     { title: "المعهد", dataIndex: "trainingCenter", key: "trainingCenter" },
@@ -118,6 +128,24 @@ export default function Dashboard() {
       }
     }
   ];
+const columns2 = [
+    { title: "الاسم", dataIndex: "title", key: "title" },
+    { title: "رقم الهاتف", dataIndex: "phone", key: "phone" },
+    { title: "العمر", dataIndex: "age", key: "age" },
+  { title: "النوع", dataIndex: "gender", key: "gender" },
+        {title:"اقليم",dataIndex:"area",key:"area"},
+
+    { title: "المهنة", dataIndex: "job", key: "job" },
+    { title: "المعهد", dataIndex: "trainingCenter", key: "trainingCenter" },
+  {
+    title: "حالة الاستبيان", dataIndex: "surveyStatus", key: "surveyStatus",
+    render: (status) => {
+      let color = ""; if (status === "مكتمل") color = "green";
+      else if (status === "غير مكتمل") color = "red"; else if (status === "جزئي")
+        color = "gold"; return (<span style={{ color: "black", display: "flex", alignItems: "center", gap: 5 }}>
+          <span style={{ width: 12, height: 12, borderRadius: "50%", backgroundColor: color, display: "inline-block" }} /> {status} </span>);
+    }
+  }];
 
   return (
     <Layout style={{ textAlign: "right", direction: "rtl" }}>
@@ -127,9 +155,9 @@ export default function Dashboard() {
         <StatsCards cards={cards} />
 
         <div style={{ marginBottom: 16 }}>
-          <Button style={{ marginRight: 8 }} onClick={() => switchTable("table1")}>بيانات المتدربين</Button>
-          <Button style={{ marginRight: 8 }} onClick={() => switchTable("table2")}>بيانات المدربين</Button>
-          <Button icon={<ReloadOutlined />} onClick={activeTable === "table1" ? fetchData1 : fetchData2} />
+          <Button style={{ marginRight: 8 }} onClick={() => switchTable("table1")}><TraineesTable/></Button>
+          <Button style={{ marginRight: 8 }} onClick={() => switchTable("table2")}><TrainersTable/></Button>
+          <Button   style={{ marginRight: 8 }} icon={<ReloadOutlined />} onClick={activeTable === "table1" ? fetchData1 : fetchData2} />
         </div>
 
         <FiltersBar
@@ -141,12 +169,14 @@ export default function Dashboard() {
           applyFilters={applyFilters}
           filteredData={filteredData}
           exportActive={exportActive}
+          area={area}
           importActive={importActive}
           setExportActive={setExportActive}
           setImportActive={setImportActive}
         />
 
         <DataTable loading={loading} filteredData={filteredData} columns={columns1} />
+        
       </Content>
       <DashboardFooter />
     </Layout>

@@ -12,6 +12,7 @@ export default function FiltersBar({
   filters,
   setFilters,
   applyFilters,
+  area,
   filteredData,
   exportActive,
   importActive,
@@ -43,7 +44,15 @@ export default function FiltersBar({
       >
         {professions.map((job, i) => <Option key={i} value={job}>{job}</Option>)}
       </Select>
-
+      <Select
+        placeholder="اقليم"
+        allowClear
+        value={filters.area}
+        onChange={(val) => handleChange("area", val)}
+        style={{ width: 180 }}
+      >
+        {area.map((area, i) => <Option key={i} value={area}>{area}</Option>)}
+      </Select>
       <Select
         placeholder="اختر المعهد"
         allowClear
