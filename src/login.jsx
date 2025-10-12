@@ -1,3 +1,4 @@
+// Login.js
 import React, { useState } from "react";
 import { Layout, Button, Input, Form, Typography } from "antd";
 import { useNavigate } from "react-router-dom";
@@ -7,10 +8,7 @@ const { Content } = Layout;
 const { Text } = Typography;
 
 export default function Login() {
-  const [loginData, setLoginData] = useState({
-    username: "",
-    password: "",
-  });
+  const [loginData, setLoginData] = useState({ username: "", password: "" });
   const [forgotMessage, setForgotMessage] = useState("");
   const navigate = useNavigate();
 
@@ -19,12 +17,17 @@ export default function Login() {
     const usernameValid = /^\d{10}$/.test(loginData.username);
     if (!usernameValid) {
       alert("الرقم الوطني يجب أن يتكون من 10 أرقام فقط ولا يحتوي على حروف أو رموز");
-      return; // يمنع الدخول
+      return;
     }
 
-    // التحقق من كلمة المرور
-    if (loginData.username === "2000200012" && loginData.password === "12345$as") {
-      localStorage.setItem("isLoggedIn", true);
+    // التحقق من credentials محليًا (للاختبار)
+    const correctUsername = "2000200012";
+    const correctPassword = "12345$as";
+
+    if (loginData.username === correctUsername && loginData.password === correctPassword) {
+      // إنشاء توكن عشوائي وحفظه (يمكن استبداله بتوكن حقيقي من السيرفر لاحقًا)
+      const token = Math.random().toString(36).substring(2);
+      localStorage.setItem("authToken", token);
       navigate("/dash");
     } else {
       alert("الرقم الوطني أو كلمة المرور غير صحيحة");
@@ -32,20 +35,11 @@ export default function Login() {
   };
 
   const handleForgotPassword = () => {
-    setForgotMessage(
-      `الرقم الوطني: ${loginData.username}, كلمة المرور: ${loginData.password}`
-    );
+    setForgotMessage(`الرقم الوطني: ${loginData.username}, كلمة المرور: ${loginData.password}`);
   };
 
   return (
-    <Layout
-      style={{
-        minHeight: "53vh",
-        justifyContent: "center",
-        alignItems: "center",
-        paddingTop: "45px",
-      }}
-    >
+    <Layout style={{ minHeight: "53vh", justifyContent: "center", alignItems: "center", paddingTop: "45px" }}>
       <Content className="login-content">
         <h2>منصة تقييم التدريب المهني</h2>
         <h2>تسجيل دخول الاداريين</h2>
@@ -61,60 +55,29 @@ export default function Login() {
             alt="National Employment & training"
           />
 
-          {/* الرقم الوطني - أرقام فقط */}
-          <Form.Item
-            label="الرقم الوطني"
-            name="username"
-            style={{ textAlign: "right" }}
-            className="login-input"
-            required
-            rules={[{ required: true, message: "الرجاء ادخال الرقم الوطني" }]}
-          >
+          <Form.Item label="الرقم الوطني" name="username" className="login-input" rules={[{ required: true, message: "الرجاء ادخال الرقم الوطني" }]}>
             <Input
               placeholder="ادخل الرقم الوطني"
               maxLength={10}
               value={loginData.username}
               onChange={(event) => {
                 const value = event.target.value;
-                // يسمح فقط بالأرقام
-                if (/^\d*$/.test(value)) {
-                  setLoginData({ ...loginData, username: value });
-                }
+                if (/^\d*$/.test(value)) setLoginData({ ...loginData, username: value });
               }}
             />
           </Form.Item>
 
-          {/* كلمة المرور */}
-          <Form.Item
-            label="كلمة المرور"
-            name="password"
-            className="login-input"
-            required
-            rules={[
-              {
-                required: true,
-                message:
-                  "ادخال كلمة المرور المكونة من 8 وتحتوي على رمز خاص ",
-              },
-            ]}
-          >
+          <Form.Item label="كلمة المرور" name="password" className="login-input" rules={[{ required: true, message: "الرجاء ادخال كلمة المرور" }]}>
             <Input.Password
               placeholder="ادخل كلمة المرور"
               maxLength={8}
               value={loginData.password}
-              onChange={(event) =>
-                setLoginData({ ...loginData, password: event.target.value })
-              }
+              onChange={(event) => setLoginData({ ...loginData, password: event.target.value })}
             />
           </Form.Item>
 
-          {/* الأزرار */}
           <Form.Item>
-            <Button
-              type="link"
-              onClick={handleForgotPassword}
-              className="login-link"
-            >
+            <Button type="link" onClick={handleForgotPassword} className="login-link">
               نسيت كلمة المرور
             </Button>
             <Button htmlType="submit" block className="login-btn">

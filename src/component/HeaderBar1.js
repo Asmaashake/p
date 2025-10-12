@@ -20,9 +20,12 @@ return (
         padding: "0 20px",
     }}
     >
+        
     <div style={{ display: "flex", alignItems: "left", gap: 10 }}>
         <Button style={buttonStyle} onClick={() => navigate("/dash")}>لوحة التحكم الإدارية</Button>
-        <Button style={buttonStyle} onClick={() => navigate("/form1")}>إدارة الاستبيان</Button>
+            <Button style={buttonStyle} onClick={() => navigate("/form1")}>إدارة الاستبيان</Button>
+                    <Button style={buttonStyle} onClick={() => navigate("/SurveysTables")}>إدارة </Button>
+
     </div>
 
     <Button

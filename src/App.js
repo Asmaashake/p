@@ -6,7 +6,10 @@ import Form1 from './component/Form1';
 import Form2  from  './component/Form2';
 import './AppStyles.css';
 import Ai from "./component/Ai";
-
+function PrivateRoute({ children }) {
+const token = localStorage.getItem("authToken");
+return token ? children : <Navigate to="/" />;
+}
 export default function App() {
 const isLoggedIn = localStorage.getItem("isLoggedIn");
 return (
@@ -20,11 +23,16 @@ return (
         
             <Route path="/ai" element={<Ai />} />
             <Route path="/form1" element={<Form1 />} />
-        <Route
-        path="/dash"
-        element={isLoggedIn ? <Dashboard /> : <Navigate to="/" />}
-        />
-    </Routes>
-    </Router>
+        <Route 
+          path="/dash" 
+          element={
+            <PrivateRoute>
+              <Dashboard />
+            </PrivateRoute>
+          } 
+      />
+    
+      </Routes>
+        </Router> 
 );
 }

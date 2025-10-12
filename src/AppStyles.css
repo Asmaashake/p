@@ -1,3 +1,15 @@
+/* ==================== دمج AppStyles و TrainingForm ==================== */
+@import url('https://fonts.googleapis.com/css2?family=An+Nahar&display=swap');
+
+body {
+  font-family: 'AnNahar', 'Cairo', sans-serif;
+  background-color: #f5f5f5;
+  margin: 0;
+  padding: 0;
+  direction: rtl;
+  text-align: right;
+}
+
 .App {
   text-align: center;
 }
@@ -29,190 +41,231 @@
 }
 
 @keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-@import url('https://fonts.googleapis.com/css2?family=An+Nahar&display=swap');
-
-body {
-  font-family: 'AnNahar', sans-serif;
-  background-color: #f5f5f5;
-  margin: 0;
-  padding: 0;
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
 }
 
-.ant-layout {
-  font-family: 'AnNahar', sans-serif;
-  
-}
+/* ==================== عناصر Admin / Layout ==================== */
+.ant-layout { font-family: 'AnNahar', sans-serif; }
+.custom-sider { height: 1500px; width: 2000px; background-color: #522524; color: white; text-align: center; padding: 22px; font-size: 20px; }
+.custom-header { background-color: #fff; display: flex; justify-content: space-between; align-items: center; padding: 0 20px; }
+.custom-header h2 { color: #522524; font-family: 'AnNahar'; }
+.custom-btn { background-color: #522524; border-color: #522524; color: #fff; font-family: 'AnNahar'; }
+.custom-btn-default { color: #522524; border-color: #522524; }
+.custom-card { border-top: 0px solid #522524; font-family: 'AnNahar'; height: 150px; display: flex; }
+.custom-card h3 { color: #522524; }
+.custom-search .ant-input { border-color: #522524; }
+.login-content { width: 400px; background: #fff; padding: 24px; border-radius: 8px; border-top: 5px solid #522524; }
+.login-content h2 { text-align: center; margin-bottom: 20px; color: #522524; }
+.login-input .ant-input, .login-input .ant-input-password { border-color: #522524; }
+.login-btn { background-color: #522524; border-color: #522524; color: #fff; }
+.login-link { color: #522524; }
 
-.custom-sider {
-  height: 1500px;
-  width: 2000px;
-  background-color: #522524;
-  color: white;
-  text-align: center;
-  padding: 22px;
-  font-size: 20px;
-}
-
-.custom-header {
-  background-color: #fff;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0 20px;
-}
-
-.custom-header h2 {
-  color: #522524;
-  font-family: 'AnNahar';
-}
-
-.custom-btn {
-  background-color: #522524;
-  border-color: #522524;
-  color: #fff;
-  font-family: 'AnNahar';
-}
-
-.custom-btn-default {
-  
-  color: #522524;
-  border-color: #522524;
-}
-
-.custom-card {
-  border-top: 0px solid #522524;
-  font-family: 'AnNahar';
-  height: 150px; /* نفس ارتفاع كل الكاردات */
-  display: flex;
-  
-}
-
-.custom-card h3 {
-  color: #522524;
-}
-
-.custom-search .ant-input {
-  border-color: #522524;
-}
-
-
-.login-content {
-  
-  width: 400px;
-  background: #fff;
-  padding: 24px;
-  border-radius: 8px;
-  border-top: 5px solid #522524;
-}
-
-.login-content h2 {
-  text-align: center;
-  margin-bottom: 20px;
-  color: #522524;
-}
-
-.login-input .ant-input, .login-input .ant-input-password {
-  
-  border-color: #522524;
-}
-
-.login-btn {
-  background-color: #522524;
-  border-color: #522524;
-  color: #fff;
-}
-
-.login-link {
-  color: #522524;
-}
-
-/* TrainingForm.css */
+/* ==================== Training Form ==================== */
 .form-container {
-  background-color: #f7f5f0;
-  min-height: 100vh;
-  padding: 30px 20px;
+  max-width: 800px;
+  margin: 40px auto;
+  padding: 25px;
+  background-color: #ffffff;
+  border-radius: 20px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+  position: relative;
 }
 
-.training-form {
-  max-width: 700px;
-  margin: 0 auto;
-}
-
-.card {
-  background-color: #fff;
-  padding: 25px 20px;
-  border-radius: 10px;
-  margin-bottom: 20px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-  transition: all 0.3s ease;
-}
-
-/* تظليل البطاقة عند إكمال الإجابة */
-.card.answered {
-  border-left: 6px solid #4caf50;
-  box-shadow: 0 4px 10px rgba(76, 175, 80, 0.2);
-}
-
-.card p, .card h3, .card label {
-  margin-bottom: 10px;
-}
-
-.required {
-  color: red;
-}
-
-input[type="text"],
-textarea {
-  width: 100%;
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  font-size: 14px;
-}
-
-.radio-label {
-  display: block;
-  margin-bottom: 8px;
-  cursor: pointer;
-}
+.training-form { display: flex; flex-direction: column; gap: 25px; }
 
 /* شريط التقدم */
 .progress-bar {
-  background-color: #ddd;
-  height: 8px;
-  border-radius: 4px;
-  margin-bottom: 20px;
+  height: 10px;
+  background: #eee;
+  border-radius: 10px;
   overflow: hidden;
+  margin-bottom: 10px;
 }
-
 .progress {
-  background-color: #522524;
   height: 100%;
-  width: 0;
-  transition: width 0.3s ease;
+  background: #ff4d4f; /* اللون الأحمر */
+  transition: width 0.4s ease;
 }
 
-/* زر الإرسال */
-.submit-btn {
-  display: block;
+/* البطاقات */
+.card {
+  background: #f9fafc;
+  padding: 20px 25px;
+  border-radius: 16px;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.06);
+  transition: all 0.3s ease;
+  text-align: center;
+}
+
+.card.answered { border-right: 6px solid #ff4d4f; background-color: #fff0f0; }
+
+/* العناوين */
+.card h3, .card h1, .card p { color: #333; margin-bottom: 12px; }
+
+/* حقول الإدخال */
+input[type="text"], select, textarea {
   width: 100%;
   padding: 12px;
-  background-color: #522524;
-  color: #fff;
-  border: none;
-  border-radius: 6px;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  outline: none;
   font-size: 16px;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
+  transition: border-color 0.3s;
 }
 
-.submit-btn:hover {
-  background-color: #7a3b33;
+input[type="text"]:focus, textarea:focus, select:focus {
+  border-color: #ff4d4f;
+  box-shadow: 0 0 5px rgba(255, 77, 79, 0.3);
 }
+
+textarea { resize: none; }
+
+/* خيارات الأسئلة */
+.radio-label {
+  display: block;
+  padding: 10px;
+  margin: 5px 0;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+.radio-label:hover { background: #fff0f0; }
+input[type="radio"] { margin-left: 10px; transform: scale(1.2); }
+
+/* أزرار التنقل */
+.red-btn {
+  background-color: #ff4d4f;
+  color: #fff;
+  border: none;
+  padding: 12px 25px;
+  border-radius: 12px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  margin: 5px;
+}
+.red-btn:hover { background-color: #d9363e; transform: translateY(-2px); }
+
+/* شاشة البداية */
+.welcome-screen { text-align: center; padding: 40px; }
+.welcome-logo { width: 220px; margin-bottom: 20px; }
+.welcome-screen h2 { color: #ff4d4f; font-size: 24px; margin-bottom: 10px; }
+.welcome-screen p { color: #555; font-size: 16px; margin-bottom: 25px; }
+
+/* شاشة الشكر */
+.thank-you-screen {
+  text-align: center;
+  padding: 60px 20px;
+  background: white;
+  border-radius: 20px;
+  box-shadow: 0 0 25px rgba(0,0,0,0.08);
+  max-width: 500px;
+  margin: 40px auto;
+}
+.thank-you-screen h2 { font-size: 24px; color: #ff4d4f; margin-bottom: 10px; }
+.thank-you-screen p { color: #333; font-size: 17px; }
+.thank-you-icon { font-size: 70px; margin-bottom: 20px; color: #00c853; }
+.new-form-btn { margin-top: 20px; background: #00e676; }
+
+/* حركة الأسئلة */
+.animated-step {
+  min-height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  flex-direction: column;
+  transition: all 0.4s ease;
+}
+
+/* صورة في الوسط */
+.form-container img { display: block; margin: 0 auto 20px auto; max-width: 400px; width: 100%; }
+
+@import url('https://fonts.googleapis.com/css2?family=An+Nahar&display=swap');
+
+body {
+  font-family: 'AnNahar', 'Cairo', sans-serif;
+  background-color: #f5f5f5;
+  margin: 0;
+  padding: 0;
+  direction: rtl;
+  text-align: right;
+}
+
+.form-container {
+  max-width: 800px;
+  margin: 40px auto;
+  padding: 25px;
+  background-color: #ffffff;
+  border-radius: 20px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+  position: relative;
+}
+
+.training-form { display: flex; flex-direction: column; gap: 25px; }
+
+.progress-bar { height: 10px; background: #eee; border-radius: 10px; overflow: hidden; margin-bottom: 10px; }
+.progress { height: 100%; background: #ff4d4f; transition: width 0.4s ease; }
+
+.card {
+  background: #f9fafc;
+  padding: 20px 25px;
+  border-radius: 16px;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.06);
+  transition: all 0.3s ease;
+  text-align: right;
+}
+.card.answered { border-right: 6px solid #ff4d4f; background-color: #fff0f0; }
+
+input[type="text"], select, textarea {
+  width: 100%;
+  padding: 12px;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  outline: none;
+  font-size: 16px;
+  text-align: right;
+  direction: rtl;
+}
+input[type="text"]:focus, textarea:focus, select:focus {
+  border-color: #ff4d4f;
+  box-shadow: 0 0 5px rgba(255, 77, 79, 0.3);
+}
+
+.radio-label {
+  text-align: right;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 10px;
+  padding: 5px;
+  cursor: pointer;
+}
+
+.buttons { display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px; }
+
+.red-btn {
+  background-color: #ff4d4f;
+  color: #fff;
+  border: none;
+  padding: 12px 25px;
+  border-radius: 12px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 600;
+}
+.red-btn:hover { background-color: #d9363e; transform: translateY(-2px); }
+
+.form-container img {
+  display: block;
+  margin: 0 auto 20px auto;
+  max-width: 400px;
+  width: 100%;
+}
+
+.welcome-screen, .thank-you-screen { text-align: center; padding: 40px; }
+.thank-you-screen h2 { color: #ff4d4f; }
