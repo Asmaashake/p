@@ -12,6 +12,7 @@ export default function Form2() {
   const [notes, setNotes] = useState("");
   const [submitted, setSubmitted] = useState(false);
 
+
   const professions = [
     "إدارة تزويد مأمور","التمديدات الصحية","تكييف وتبريد","حداد ألمنيوم","حداد فاصلون",
     "دهان اثاث خشبي","دهان مباني / مجهز ديكورات جبسية","فني آلات صناعية","قصير , مركب قواطع جبس",
@@ -62,22 +63,20 @@ export default function Form2() {
     setSubmitted(true);
 
     const data = {
-      traineeName,
+    traineeName,
       selectedProfession,
       trainingCenter,
       evaluation,
-      answers,
-      notes
+      answers: answers.map((a,i) => ({ question: questions[i].question, answer: a })),
+      date: new Date().toLocaleString("ar-EG"),
     };
+      const existingData = JSON.parse(localStorage.getItem("form2Submissions") || "[]");
+    existingData.push(data);
+    localStorage.setItem("form2Submissions", JSON.stringify(existingData));
 
-    const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = `${traineeName || "answers"}-form2.json`;
-    a.click();
-    URL.revokeObjectURL(url);
+    setSubmitted(true);
   };
+    
 
   const totalSteps = 1 + 1 + questions.length + 1; 
   const progress = ((step) / totalSteps) * 100;

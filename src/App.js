@@ -6,6 +6,7 @@ import Form1 from './component/Form1';
 import Form2  from  './component/Form2';
 import './AppStyles.css';
 import Ai from "./component/Ai";
+import AdminPage from "./component/admin";
 function PrivateRoute({ children }) {
 const token = localStorage.getItem("authToken");
 return token ? children : <Navigate to="/" />;
@@ -13,15 +14,15 @@ return token ? children : <Navigate to="/" />;
 export default function App() {
 const isLoggedIn = localStorage.getItem("isLoggedIn");
 return (
-    <Router>
+  <Router>
+    
     <Routes>
         <Route
         path="/"
         element={ <Login />}
             />
             <Route path="/form2" element={<Form2 />} />
-        
-            <Route path="/ai" element={<Ai />} />
+            <Route path="/admin" element={<AdminPage />}/>
             <Route path="/form1" element={<Form1 />} />
         <Route 
           path="/dash" 

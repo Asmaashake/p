@@ -179,6 +179,7 @@ export default function Dashboard() {
           <Button style={{ marginRight: 8 }} onClick={() => switchTable("table1")}><TraineesTable/></Button>
           <Button style={{ marginRight: 8 }} onClick={() => switchTable("table2")}><TrainersTable/></Button>
           <Button style={{ marginRight: 8 }} icon={<ReloadOutlined />} onClick={activeTable === "table1" ? fetchData1 : fetchData2} />
+          
         </div>
 
         <FiltersBar

@@ -67,10 +67,10 @@ export default function Form2() {
       selectedProfession,
       trainingCenter,
       evaluation,
-      answers,
+      answers: answers.map((a,i) => ({ question: questions[i].question, answer: a })),
       notes
     };
-
+    
     const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
