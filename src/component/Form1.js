@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import "../AppStyles.css";
-export default function Form2() {
+export default function Form1() {
   const [step, setStep] = useState(0);
   const [traineeName, setTraineeName] = useState("");
   const [selectedProfession, setSelectedProfession] = useState("");
