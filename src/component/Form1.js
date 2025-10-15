@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import "../AppStyles.css";
+
 export default function Form1() {
   const [step, setStep] = useState(0);
   const [traineeName, setTraineeName] = useState("");
@@ -58,27 +59,25 @@ export default function Form1() {
   const handleNext = () => setStep(step + 1);
   const handlePrev = () => setStep(step - 1);
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    setSubmitted(true);
-
-    const data = {
-      traineeName,
-      selectedProfession,
-      trainingCenter,
-      evaluation,
-      answers: answers.map((a,i) => ({ question: questions[i].question, answer: a })),
-      notes
-    };
-    
-    const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = `${traineeName || "answers"}.json`;
-    a.click();
-    URL.revokeObjectURL(url);
+const handleSubmit = (e) => {
+  e.preventDefault();
+  const data = {
+    traineeName,
+    selectedProfession,
+    trainingCenter,
+    evaluation,
+    answers: answers.map((a,i) => ({ question: questions[i].question, answer: a })),
+    notes,
+    date: new Date().toLocaleString("ar-EG") // ← أضف هذا السطر
   };
+
+  // تخزين البيانات في localStorage
+  const existingData = JSON.parse(localStorage.getItem("form1Submissions") || "[]");
+  existingData.push(data);
+  localStorage.setItem("form1Submissions", JSON.stringify(existingData));
+
+  setSubmitted(true);
+};
 
   const totalSteps = 1 + 1 + questions.length + 1; 
   const progress = ((step) / totalSteps) * 100;
@@ -99,7 +98,7 @@ export default function Form1() {
             exit={{ opacity: 0, y: -30 }}
           >
             <h2>شكرًا لك على إكمال الاستبيان!</h2>
-            <p>تم تسجيل إجاباتك بنجاح وسيتم تحميل الملف.</p>
+            <p>تم تسجيل إجاباتك بنجاح.</p>
           </motion.div>
         ) : (
           <motion.form
