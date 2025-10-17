@@ -9,7 +9,6 @@ export default function Form1() {
   const [trainingCenter, setTrainingCenter] = useState("");
   const [evaluation, setEvaluation] = useState("");
   const [answers, setAnswers] = useState([]);
-  const [notes, setNotes] = useState("");
   const [submitted, setSubmitted] = useState(false);
 
   const professions = [
@@ -59,28 +58,24 @@ export default function Form1() {
   const handleNext = () => setStep(step + 1);
   const handlePrev = () => setStep(step - 1);
 
-const handleSubmit = (e) => {
-  e.preventDefault();
-  const data = {
-    traineeName,
-    selectedProfession,
-    trainingCenter,
-    evaluation,
-    answers: answers.map((a,i) => ({ question: questions[i].question, answer: a })),
-    notes,
-    date: new Date().toLocaleString("ar-EG") // ← أضف هذا السطر
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const data = {
+      traineeName,
+      selectedProfession,
+      trainingCenter,
+      evaluation,
+      answers: answers.map((a,i) => ({ question: questions[i].question, answer: a })),
+      date: new Date().toLocaleString("ar-EG")
+    };
+    const existingData = JSON.parse(localStorage.getItem("form1Submissions") || "[]");
+    existingData.push(data);
+    localStorage.setItem("form1Submissions", JSON.stringify(existingData));
+    setSubmitted(true);
   };
 
-  // تخزين البيانات في localStorage
-  const existingData = JSON.parse(localStorage.getItem("form1Submissions") || "[]");
-  existingData.push(data);
-  localStorage.setItem("form1Submissions", JSON.stringify(existingData));
-
-  setSubmitted(true);
-};
-
-  const totalSteps = 1 + 1 + questions.length + 1; 
-  const progress = ((step) / totalSteps) * 100;
+  const totalSteps = 1 + 1 + questions.length; // ترحيب + بيانات + أسئلة
+  const progress = (step / totalSteps) * 100;
 
   return (
     <div className="form-container">
@@ -149,19 +144,34 @@ const handleSubmit = (e) => {
               </div>
             )}
 
+            {/* الأسئلة خطوة خطوة */}
             {step > 1 && step <= questions.length + 1 && (
               <div className="card">
                 <p>{questions[step-2].question}</p>
                 {questions[step-2].options.map((opt,i)=>(
                   <label key={i} className="radio-label">
-                    <input type="radio" name={`q-${step-2}`} value={opt} checked={answers[step-2]===opt} onChange={()=>handleAnswerChange(step-2,opt)} required/>
+                    <input
+                      type="radio"
+                      name={`q-${step-2}`}
+                      value={opt}
+                      checked={answers[step-2]===opt}
+                      onChange={()=>handleAnswerChange(step-2,opt)}
+                      required
+                    />
                     {opt}
                   </label>
                 ))}
                 <div className="buttons">
                   {step>2 && <button type="button" className="red-btn prev-btn" onClick={handlePrev}>السابق</button>}
-                  {step < questions.length+1 ? 
-                    <button type="button" className="red-btn next-btn" onClick={handleNext}>التالي</button> :
+                  {step < questions.length+1 ?
+                    <button
+                      type="button"
+                      className="red-btn next-btn"
+                      onClick={handleNext}
+                      disabled={answers[step-2] === undefined} // يمنع التقدم بدون اختيار
+                    >
+                      التالي
+                    </button> :
                     <button type="submit" className="red-btn submit-btn">إرسال</button>
                   }
                 </div>

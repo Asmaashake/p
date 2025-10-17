@@ -12,7 +12,6 @@ export default function Form2() {
   const [notes, setNotes] = useState("");
   const [submitted, setSubmitted] = useState(false);
 
-
   const professions = [
     "إدارة تزويد مأمور","التمديدات الصحية","تكييف وتبريد","حداد ألمنيوم","حداد فاصلون",
     "دهان اثاث خشبي","دهان مباني / مجهز ديكورات جبسية","فني آلات صناعية","قصير , مركب قواطع جبس",
@@ -60,26 +59,23 @@ export default function Form2() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    setSubmitted(true);
-
     const data = {
-    traineeName,
+      traineeName,
       selectedProfession,
       trainingCenter,
       evaluation,
       answers: answers.map((a,i) => ({ question: questions[i].question, answer: a })),
-      date: new Date().toLocaleString("ar-EG"),
+      notes,
+      date: new Date().toLocaleString("ar-EG")
     };
-      const existingData = JSON.parse(localStorage.getItem("form2Submissions") || "[]");
+    const existingData = JSON.parse(localStorage.getItem("form2Submissions") || "[]");
     existingData.push(data);
     localStorage.setItem("form2Submissions", JSON.stringify(existingData));
-
     setSubmitted(true);
   };
-    
 
   const totalSteps = 1 + 1 + questions.length + 1; 
-  const progress = ((step) / totalSteps) * 100;
+  const progress = (step / totalSteps) * 100;
 
   return (
     <div className="form-container">
@@ -89,7 +85,7 @@ export default function Form2() {
 
       <AnimatePresence exitBeforeEnter>
         {submitted ? (
-          <motion.div 
+          <motion.div
             key="thankyou"
             className="thank-you-screen"
             initial={{ opacity: 0, y: 30 }}
@@ -97,7 +93,7 @@ export default function Form2() {
             exit={{ opacity: 0, y: -30 }}
           >
             <h2>شكرًا لك على إكمال الاستبيان!</h2>
-            <p>تم تسجيل إجاباتك بنجاح وسيتم تحميل الملف.</p>
+            <p>تم تسجيل إجاباتك بنجاح.</p>
           </motion.div>
         ) : (
           <motion.form
@@ -109,7 +105,7 @@ export default function Form2() {
             exit={{ opacity: 0, x: -50 }}
             transition={{ duration: 0.4 }}
           >
-            <img src="https://tse4.mm.bing.net/th/id/OIP.HEil-u4k_qmvxrr4fbu2OAAAAA?pid=Api&P=0&h=220" alt="Logo"/>
+            <img src="https://tse4.mm.bing.net/th/id/OIP.HEil-u4k_qmvxrr4fbu2OAAAAA?pid=Api&P=0&h=220" alt="Logo" />
 
             {step === 0 && (
               <div className="welcome-screen">
@@ -160,7 +156,7 @@ export default function Form2() {
                 <div className="buttons">
                   {step>2 && <button type="button" className="red-btn prev-btn" onClick={handlePrev}>السابق</button>}
                   {step < questions.length+1 ? 
-                    <button type="button" className="red-btn next-btn" onClick={handleNext}>التالي</button> :
+                    <button type="button" className="red-btn next-btn" onClick={handleNext} disabled={answers[step-2]===undefined}>التالي</button> :
                     <button type="submit" className="red-btn submit-btn">إرسال</button>
                   }
                 </div>

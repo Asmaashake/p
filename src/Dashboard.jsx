@@ -8,8 +8,8 @@ import StatsCards from "./component/StatsCards";
 import FiltersBar from "./component/FiltersBar";
 import DataTable from "./component/DataTable";
 import DashboardFooter from "./component/DashboardFooter";
-import TraineesTable from "./component/TrainersTable";
-import TrainersTable from "./component/TraineesTable";
+import TraineesTable from "./component/TraineesTable";
+import TrainersTable from "./component/TrainersTable";
 
 const { Content } = Layout;
 
@@ -29,13 +29,6 @@ const professions = [
 ];
 const area = ["شمال", "جنوب", "شرق", "غرب"];
 
-const cards = [
-  { icon: <UserOutlined style={{ fontSize: 30, color: "#522524" }} />, title: "معدل استجابة المدربين", description: "60%" },
-  { icon: <UserOutlined style={{ fontSize: 30, color: "#522524" }} />, title: "معدل استجابة المتدربين", description: "40%" },
-  { icon: <UserOutlined style={{ fontSize: 30, color: "#522524" }} />, title: "إجمالي المدربين", description: "20" },
-  { icon: <UserOutlined style={{ fontSize: 30, color: "#522524" }} />, title: "إجمالي المتدربين", description: "10" }
-];
-
 export default function Dashboard() {
   const [data1, setData1] = useState([]);
   const [data2, setData2] = useState([]);
@@ -43,9 +36,11 @@ export default function Dashboard() {
   const [loading, setLoading] = useState(false);
   const [activeTable, setActiveTable] = useState("table1");
   const [filters, setFilters] = useState({ search: "", job: null, center: null, status: null, area: null });
-  const [exportActive, setExportActive] = useState(false);
-  const [importActive, setImportActive] = useState(false);
 
+  const [traineesCount, setTraineesCount] = useState(0);
+  const [trainersCount, setTrainersCount] = useState(0);
+
+  // جلب بيانات المتدربين
   const fetchData1 = () => {
     setLoading(true);
     axios.get("https://jsonplaceholder.typicode.com/users")
@@ -69,6 +64,7 @@ export default function Dashboard() {
       .catch(() => setLoading(false));
   };
 
+  // جلب بيانات المدربين
   const fetchData2 = () => {
     setLoading(true);
     axios.get("https://jsonplaceholder.typicode.com/posts")
@@ -97,27 +93,23 @@ export default function Dashboard() {
     fetchData2();
   }, []);
 
+  // تحديث الأعداد بعد تطبيق الفلاتر
+  useEffect(() => {
+    if (activeTable === "table1") setTraineesCount(filteredData.length);
+    if (activeTable === "table2") setTrainersCount(filteredData.length);
+  }, [filteredData, activeTable]);
+
   const applyFilters = ({ search, job, center, status, area: areaFilter }) => {
     let data = activeTable === "table1" ? data1 : data2;
 
-    // بحث نصي
     if (search && search.trim() !== "") {
       data = data.filter(d =>
-        (d.name?.toLowerCase().includes(search.toLowerCase()) || d.title?.toLowerCase().includes(search.toLowerCase()))
-        || d.phone.includes(search)
+        d.name?.toLowerCase().includes(search.toLowerCase()) || d.phone.includes(search)
       );
     }
-
-    // فلترة المهنة
     if (job && job !== "الكل") data = data.filter(d => d.job === job);
-
-    // فلترة الإقليم
     if (areaFilter && areaFilter !== "الكل") data = data.filter(d => d.area === areaFilter);
-
-    // فلترة المركز التدريبي
     if (center && center !== "الكل") data = data.filter(d => d.trainingCenter === center);
-
-    // فلترة حالة الاستبيان
     if (status && status !== "الكل") data = data.filter(d => d.surveyStatus === status);
 
     setFilteredData(data);
@@ -130,26 +122,6 @@ export default function Dashboard() {
   };
 
   const columns1 = [
-    { title: "الاسم", dataIndex: "name", key: "name" },
-    { title: "رقم الهاتف", dataIndex: "phone", key: "phone" },
-    { title: "العمر", dataIndex: "age", key: "age" },
-    { title: "رقم الدفعة", dataIndex: "id", key: "id" },
-    { title:"اقليم", dataIndex:"area",key:"area" },
-    { title: "النوع", dataIndex: "gender", key: "gender" },
-    { title: "المهنة", dataIndex: "job", key: "job" },
-    { title: "المعهد", dataIndex: "trainingCenter", key: "trainingCenter" },
-    { title: "حالة الاستبيان", dataIndex: "surveyStatus", key: "surveyStatus",
-      render: status => {
-        const color = status === "مكتمل" ? "green" : status === "جزئي" ? "gold" : "red";
-        return <span style={{ display: "flex", alignItems: "center", gap: 5 }}>
-          <span style={{ width: 12, height: 12, borderRadius: "50%", backgroundColor: color }} />
-          {status}
-        </span>
-      }
-    }
-  ];
-
-  const columns2 = [
     { title: "الاسم", dataIndex: "name", key: "name" },
     { title: "رقم الهاتف", dataIndex: "phone", key: "phone" },
     { title: "العمر", dataIndex: "age", key: "age" },
@@ -168,6 +140,15 @@ export default function Dashboard() {
     }
   ];
 
+  const columns2 = columns1; // نفس الأعمدة تقريبًا للمدربين
+
+  const cards = [
+    { icon: <UserOutlined style={{ fontSize: 30, color: "#522524" }} />, title: "عدد المتدربين", description: traineesCount },
+    { icon: <UserOutlined style={{ fontSize: 30, color: "#522524" }} />, title: "عدد المدربين", description: trainersCount },
+    { icon: <UserOutlined style={{ fontSize: 30, color: "#522524" }} />, title: "معدل استجابة المتدربين", description: `${traineesCount ? Math.round((data1.filter(d => d.surveyStatus === 'مكتمل').length / traineesCount) * 100) : 0}%` },
+    { icon: <UserOutlined style={{ fontSize: 30, color: "#522524" }} />, title: "معدل استجابة المدربين", description: `${trainersCount ? Math.round((data2.filter(d => d.surveyStatus === 'مكتمل').length / trainersCount) * 100) : 0}%` }
+  ];
+
   return (
     <Layout style={{ textAlign: "right", direction: "rtl" }}>
       <HeaderBar1 />
@@ -176,10 +157,9 @@ export default function Dashboard() {
         <StatsCards cards={cards} />
 
         <div style={{ marginBottom: 16 }}>
-          <Button style={{ marginRight: 8 }} onClick={() => switchTable("table1")}><TraineesTable/></Button>
-          <Button style={{ marginRight: 8 }} onClick={() => switchTable("table2")}><TrainersTable/></Button>
+          <Button style={{ marginRight: 8 }} onClick={() => switchTable("table1")}><TrainersTable/></Button>
+          <Button style={{ marginRight: 8 }} onClick={() => switchTable("table2")}><TraineesTable/></Button>
           <Button style={{ marginRight: 8 }} icon={<ReloadOutlined />} onClick={activeTable === "table1" ? fetchData1 : fetchData2} />
-          
         </div>
 
         <FiltersBar
@@ -190,21 +170,16 @@ export default function Dashboard() {
           setFilters={setFilters}
           applyFilters={applyFilters}
           filteredData={filteredData}
-          exportActive={exportActive}
           area={area}
-          importActive={importActive}
-          setExportActive={setExportActive}
-          setImportActive={setImportActive}
         />
 
         <DataTable
           loading={loading}
           filteredData={filteredData}
           columns={activeTable === "table1" ? columns1 : columns2}
-        
-          
+          scroll={{ x: 1200, y: 400 }} // تمرير أفقي وعمودي
+          footer={() => `عدد السجلات: ${filteredData.length}`}
         />
-
       </Content>
       <DashboardFooter />
     </Layout>
