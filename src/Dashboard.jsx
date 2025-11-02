@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
+import apiClient from "./api/config";
 import { Layout, Row, Button } from "antd";
 import { ReloadOutlined, UserOutlined } from "@ant-design/icons";
 import HeaderBar1 from "./component/HeaderBar1";
@@ -17,15 +17,43 @@ const { Content } = Layout;
 const gender = ["ذكر", "أنثى"];
 const surveyStatus = ["مكتمل", "غير مكتمل", "جزئي"];
 const Institute = [
-  "الحسينية","معهد الجفر","معهد الرمثا","معهد الريشة","معهد الزرقاء","معهد الطفيلة",
-  "معهد العقبة","معهد الكرك","معهد الكورة","معهد الموقر","معهد جرش","معهد ذيبان",
-  "معهد عجلون","معهد مادبا","معهد ماركا","معهد معان","معهد السرحان","العقبة/القويرة",
-  "رحاب","الصفاوي","مركز العقبة (HUB)","الرويشد","مشغل قرا بني هاشم"
+  "الحسينية",
+  "معهد الجفر",
+  "معهد الرمثا",
+  "معهد الريشة",
+  "معهد الزرقاء",
+  "معهد الطفيلة",
+  "معهد العقبة",
+  "معهد الكرك",
+  "معهد الكورة",
+  "معهد الموقر",
+  "معهد جرش",
+  "معهد ذيبان",
+  "معهد عجلون",
+  "معهد مادبا",
+  "معهد ماركا",
+  "معهد معان",
+  "معهد السرحان",
+  "العقبة/القويرة",
+  "رحاب",
+  "الصفاوي",
+  "مركز العقبة (HUB)",
+  "الرويشد",
+  "مشغل قرا بني هاشم",
 ];
 const professions = [
-  "إدارة تزويد مأمور","التمديدات الصحية","تكييف وتبريد","حداد ألمنيوم","حداد فاصلون",
-  "دهان أثاث خشبي","دهان مباني / مجهز ديكورات جبسية","فني آلات صناعية",
-  "كهربائي تمديدات منزلي وتحكم","كهربائي سيارات","نجار أثاث","ميكانيك مركبات خفيفة"
+  "إدارة تزويد مأمور",
+  "التمديدات الصحية",
+  "تكييف وتبريد",
+  "حداد ألمنيوم",
+  "حداد فاصلون",
+  "دهان أثاث خشبي",
+  "دهان مباني / مجهز ديكورات جبسية",
+  "فني آلات صناعية",
+  "كهربائي تمديدات منزلي وتحكم",
+  "كهربائي سيارات",
+  "نجار أثاث",
+  "ميكانيك مركبات خفيفة",
 ];
 const area = ["شمال", "جنوب", "شرق", "غرب"];
 
@@ -35,7 +63,13 @@ export default function Dashboard() {
   const [filteredData, setFilteredData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [activeTable, setActiveTable] = useState("table1");
-  const [filters, setFilters] = useState({ search: "", job: null, center: null, status: null, area: null });
+  const [filters, setFilters] = useState({
+    search: "",
+    job: null,
+    center: null,
+    status: null,
+    area: null,
+  });
 
   const [traineesCount, setTraineesCount] = useState(0);
   const [trainersCount, setTrainersCount] = useState(0);
@@ -43,49 +77,57 @@ export default function Dashboard() {
   // جلب بيانات المتدربين
   const fetchData1 = () => {
     setLoading(true);
-    axios.get("https://jsonplaceholder.typicode.com/users")
-      .then(res => {
-        const formatted = res.data.map(u => ({
-          key: u.id,
-          name: u.name,
-          id: "32",
-          phone: "962" + Math.floor(10000000 + Math.random() * 90000000),
-          age: u.id + 18,
-          area: area[Math.floor(Math.random() * area.length)],
-          gender: gender[Math.floor(Math.random() * gender.length)],
-          trainingCenter: Institute[Math.floor(Math.random() * Institute.length)],
-          job: professions[Math.floor(Math.random() * professions.length)],
-          surveyStatus: surveyStatus[Math.floor(Math.random() * surveyStatus.length)],
+    apiClient
+      .get("/api/admin/get-users")
+      .then((res) => {
+        const formatted = res.data.map((u, index) => ({
+          key: u.nationalId,
+          name: `${u.firstName} ${u.lastName}`,
+          id: u.nationalId,
+          phone: u.phone || "غير محدد",
+          age: Math.floor(Math.random() * 15) + 18, // Random age for demo
+          area: u.region || "غير محدد",
+          gender: u.gender === "M" ? "ذكر" : "أنثى",
+          trainingCenter: u.institute || "غير محدد",
+          job: u.profession || "غير محدد",
+          surveyStatus: u.surveyCompletionStatus || "غير مكتمل",
         }));
         setData1(formatted);
         if (activeTable === "table1") setFilteredData(formatted);
         setLoading(false);
       })
-      .catch(() => setLoading(false));
+      .catch((error) => {
+        console.error("Error fetching users:", error);
+        setLoading(false);
+      });
   };
 
   // جلب بيانات المدربين
   const fetchData2 = () => {
     setLoading(true);
-    axios.get("https://jsonplaceholder.typicode.com/posts")
-      .then(res => {
-        const formatted = res.data.slice(0, 20).map(p => ({
-          key: p.id,
-          name: p.title,
-          id: "32",
-          phone: "962" + Math.floor(10000000 + Math.random() * 90000000),
-          age: p.id + 25,
-          area: area[Math.floor(Math.random() * area.length)],
-          gender: gender[Math.floor(Math.random() * gender.length)],
-          trainingCenter: Institute[Math.floor(Math.random() * Institute.length)],
-          job: professions[Math.floor(Math.random() * professions.length)],
-          surveyStatus: surveyStatus[Math.floor(Math.random() * surveyStatus.length)],
+    apiClient
+      .get("/api/admin/get-trainers")
+      .then((res) => {
+        const formatted = res.data.map((p, index) => ({
+          key: p.nationalId,
+          name: `${p.firstName} ${p.lastName}`,
+          id: p.nationalId,
+          phone: p.phone || "غير محدد",
+          age: Math.floor(Math.random() * 15) + 25, // Random age for demo
+          area: p.region || "غير محدد",
+          gender: p.gender === "M" ? "ذكر" : "أنثى",
+          trainingCenter: p.institute || "غير محدد",
+          job: p.profession || "غير محدد",
+          surveyStatus: p.surveyCompletionStatus || "غير مكتمل",
         }));
         setData2(formatted);
         if (activeTable === "table2") setFilteredData(formatted);
         setLoading(false);
       })
-      .catch(() => setLoading(false));
+      .catch((error) => {
+        console.error("Error fetching trainers:", error);
+        setLoading(false);
+      });
   };
 
   useEffect(() => {
@@ -103,21 +145,32 @@ export default function Dashboard() {
     let data = activeTable === "table1" ? data1 : data2;
 
     if (search && search.trim() !== "") {
-      data = data.filter(d =>
-        d.name?.toLowerCase().includes(search.toLowerCase()) || d.phone.includes(search)
+      data = data.filter(
+        (d) =>
+          d.name?.toLowerCase().includes(search.toLowerCase()) ||
+          d.phone.includes(search)
       );
     }
-    if (job && job !== "الكل") data = data.filter(d => d.job === job);
-    if (areaFilter && areaFilter !== "الكل") data = data.filter(d => d.area === areaFilter);
-    if (center && center !== "الكل") data = data.filter(d => d.trainingCenter === center);
-    if (status && status !== "الكل") data = data.filter(d => d.surveyStatus === status);
+    if (job && job !== "الكل") data = data.filter((d) => d.job === job);
+    if (areaFilter && areaFilter !== "الكل")
+      data = data.filter((d) => d.area === areaFilter);
+    if (center && center !== "الكل")
+      data = data.filter((d) => d.trainingCenter === center);
+    if (status && status !== "الكل")
+      data = data.filter((d) => d.surveyStatus === status);
 
     setFilteredData(data);
   };
 
   const switchTable = (table) => {
     setActiveTable(table);
-    setFilters({ search: "", job: null, center: null, status: null, area: null });
+    setFilters({
+      search: "",
+      job: null,
+      center: null,
+      status: null,
+      area: null,
+    });
     setFilteredData(table === "table1" ? data1 : data2);
   };
 
@@ -125,41 +178,102 @@ export default function Dashboard() {
     { title: "الاسم", dataIndex: "name", key: "name" },
     { title: "رقم الهاتف", dataIndex: "phone", key: "phone" },
     { title: "العمر", dataIndex: "age", key: "age" },
-    { title:"اقليم", dataIndex:"area",key:"area" },
+    { title: "اقليم", dataIndex: "area", key: "area" },
     { title: "النوع", dataIndex: "gender", key: "gender" },
     { title: "المهنة", dataIndex: "job", key: "job" },
     { title: "المعهد", dataIndex: "trainingCenter", key: "trainingCenter" },
-    { title: "حالة الاستبيان", dataIndex: "surveyStatus", key: "surveyStatus",
-      render: status => {
-        const color = status === "مكتمل" ? "green" : status === "جزئي" ? "gold" : "red";
-        return <span style={{ display: "flex", alignItems: "center", gap: 5 }}>
-          <span style={{ width: 12, height: 12, borderRadius: "50%", backgroundColor: color }} />
-          {status}
-        </span>;
-      }
-    }
+    {
+      title: "حالة الاستبيان",
+      dataIndex: "surveyStatus",
+      key: "surveyStatus",
+      render: (status) => {
+        const color =
+          status === "مكتمل" ? "green" : status === "جزئي" ? "gold" : "red";
+        return (
+          <span style={{ display: "flex", alignItems: "center", gap: 5 }}>
+            <span
+              style={{
+                width: 12,
+                height: 12,
+                borderRadius: "50%",
+                backgroundColor: color,
+              }}
+            />
+            {status}
+          </span>
+        );
+      },
+    },
   ];
 
   const columns2 = columns1; // نفس الأعمدة تقريبًا للمدربين
 
   const cards = [
-    { icon: <UserOutlined style={{ fontSize: 30, color: "#522524" }} />, title: "عدد المتدربين", description: traineesCount },
-    { icon: <UserOutlined style={{ fontSize: 30, color: "#522524" }} />, title: "عدد المدربين", description: trainersCount },
-    { icon: <UserOutlined style={{ fontSize: 30, color: "#522524" }} />, title: "معدل استجابة المتدربين", description: `${traineesCount ? Math.round((data1.filter(d => d.surveyStatus === 'مكتمل').length / traineesCount) * 100) : 0}%` },
-    { icon: <UserOutlined style={{ fontSize: 30, color: "#522524" }} />, title: "معدل استجابة المدربين", description: `${trainersCount ? Math.round((data2.filter(d => d.surveyStatus === 'مكتمل').length / trainersCount) * 100) : 0}%` }
+    {
+      icon: <UserOutlined style={{ fontSize: 30, color: "#522524" }} />,
+      title: "عدد المتدربين",
+      description: traineesCount,
+    },
+    {
+      icon: <UserOutlined style={{ fontSize: 30, color: "#522524" }} />,
+      title: "عدد المدربين",
+      description: trainersCount,
+    },
+    {
+      icon: <UserOutlined style={{ fontSize: 30, color: "#522524" }} />,
+      title: "معدل استجابة المتدربين",
+      description: `${
+        traineesCount
+          ? Math.round(
+              (data1.filter((d) => d.surveyStatus === "مكتمل").length /
+                traineesCount) *
+                100
+            )
+          : 0
+      }%`,
+    },
+    {
+      icon: <UserOutlined style={{ fontSize: 30, color: "#522524" }} />,
+      title: "معدل استجابة المدربين",
+      description: `${
+        trainersCount
+          ? Math.round(
+              (data2.filter((d) => d.surveyStatus === "مكتمل").length /
+                trainersCount) *
+                100
+            )
+          : 0
+      }%`,
+    },
   ];
 
   return (
     <Layout style={{ textAlign: "right", direction: "rtl" }}>
       <HeaderBar1 />
       <Content style={{ padding: 20 }}>
-        <Row><Ai /></Row>
+        <Row>
+          <Ai />
+        </Row>
         <StatsCards cards={cards} />
 
         <div style={{ marginBottom: 16 }}>
-          <Button style={{ marginRight: 8 }} onClick={() => switchTable("table1")}><TrainersTable/></Button>
-          <Button style={{ marginRight: 8 }} onClick={() => switchTable("table2")}><TraineesTable/></Button>
-          <Button style={{ marginRight: 8 }} icon={<ReloadOutlined />} onClick={activeTable === "table1" ? fetchData1 : fetchData2} />
+          <Button
+            style={{ marginRight: 8 }}
+            onClick={() => switchTable("table1")}
+          >
+            <TrainersTable />
+          </Button>
+          <Button
+            style={{ marginRight: 8 }}
+            onClick={() => switchTable("table2")}
+          >
+            <TraineesTable />
+          </Button>
+          <Button
+            style={{ marginRight: 8 }}
+            icon={<ReloadOutlined />}
+            onClick={activeTable === "table1" ? fetchData1 : fetchData2}
+          />
         </div>
 
         <FiltersBar
