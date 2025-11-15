@@ -285,6 +285,7 @@ export default function Dashboard() {
           applyFilters={applyFilters}
           filteredData={filteredData}
           area={area}
+          tableType={activeTable === "table1" ? "users" : "users"}
         />
 
         <DataTable

@@ -47,7 +47,7 @@ export default function Login() {
         setTimeout(() => {
           // Redirect based on user role
           if (response.data.user.role === "admin") {
-            navigate("/admin");
+            navigate("/dash");
           } else {
             // Trainers and trainees go to survey dashboard
             navigate("/surveys");
