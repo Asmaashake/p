@@ -19,12 +19,12 @@ apiClient.interceptors.request.use(
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
-    
+
     // Add auth bypass for development
     if (process.env.NODE_ENV === "development" || !token) {
       config.headers["x-bypass-auth"] = "development";
     }
-    
+
     return config;
   },
   (error) => {

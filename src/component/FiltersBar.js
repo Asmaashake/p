@@ -1,6 +1,20 @@
 import React, { useState } from "react";
-import { Button, Input, Select, Space, Typography, Modal, message, Upload, Progress } from "antd";
-import { DownloadOutlined, UploadOutlined, FileTextOutlined } from "@ant-design/icons";
+import {
+  Button,
+  Input,
+  Select,
+  Space,
+  Typography,
+  Modal,
+  message,
+  Upload,
+  Progress,
+} from "antd";
+import {
+  DownloadOutlined,
+  UploadOutlined,
+  FileTextOutlined,
+} from "@ant-design/icons";
 import exportImportService from "../api/exportImportService";
 
 const { Search } = Input;
@@ -20,7 +34,7 @@ export default function FiltersBar({
   importActive,
   setExportActive,
   setImportActive,
-  tableType = 'users' // Add tableType prop to determine which data to export/import
+  tableType = "users", // Add tableType prop to determine which data to export/import
 }) {
   const [exportModalVisible, setExportModalVisible] = useState(false);
   const [importModalVisible, setImportModalVisible] = useState(false);
@@ -38,16 +52,16 @@ export default function FiltersBar({
     try {
       let result;
       switch (tableType) {
-        case 'users':
+        case "users":
           result = await exportImportService.exportUsers(format);
           break;
-        case 'institutes':
+        case "institutes":
           result = await exportImportService.exportInstitutes(format);
           break;
-        case 'professions':
+        case "professions":
           result = await exportImportService.exportProfessions(format);
           break;
-        case 'survey-responses':
+        case "survey-responses":
           result = await exportImportService.exportSurveyResponses(format);
           break;
         default:
@@ -61,7 +75,7 @@ export default function FiltersBar({
         message.error(result.message);
       }
     } catch (error) {
-      message.error('فشل في تصدير البيانات');
+      message.error("فشل في تصدير البيانات");
     } finally {
       setLoading(false);
     }
@@ -78,24 +92,33 @@ export default function FiltersBar({
     try {
       let result;
       switch (tableType) {
-        case 'users':
-          result = await exportImportService.importUsers(file, setUploadProgress);
+        case "users":
+          result = await exportImportService.importUsers(
+            file,
+            setUploadProgress
+          );
           break;
-        case 'institutes':
-          result = await exportImportService.importInstitutes(file, setUploadProgress);
+        case "institutes":
+          result = await exportImportService.importInstitutes(
+            file,
+            setUploadProgress
+          );
           break;
         default:
-          result = await exportImportService.importUsers(file, setUploadProgress);
+          result = await exportImportService.importUsers(
+            file,
+            setUploadProgress
+          );
       }
 
       if (result.success) {
         message.success(result.message);
         setImportModalVisible(false);
-        
+
         // Show import results
         if (result.results) {
           Modal.info({
-            title: 'نتائج الاستيراد',
+            title: "نتائج الاستيراد",
             content: (
               <div>
                 <p>المجموع: {result.results.total}</p>
@@ -106,7 +129,9 @@ export default function FiltersBar({
                     <p>أخطاء ({result.results.errors.length}):</p>
                     <ul>
                       {result.results.errors.slice(0, 5).map((error, index) => (
-                        <li key={index}>السطر {error.row}: {error.message}</li>
+                        <li key={index}>
+                          السطر {error.row}: {error.message}
+                        </li>
                       ))}
                     </ul>
                     {result.results.errors.length > 5 && <p>... والمزيد</p>}
@@ -116,14 +141,14 @@ export default function FiltersBar({
             ),
           });
         }
-        
+
         // Reload page to show updated data
         window.location.reload();
       } else {
         message.error(result.message);
       }
     } catch (error) {
-      message.error('فشل في استيراد البيانات');
+      message.error("فشل في استيراد البيانات");
     } finally {
       setLoading(false);
       setUploadProgress(0);
@@ -154,7 +179,11 @@ export default function FiltersBar({
         onChange={(val) => handleChange("job", val)}
         style={{ width: 180 }}
       >
-        {professions.map((job, i) => <Option key={i} value={job}>{job}</Option>)}
+        {professions.map((job, i) => (
+          <Option key={i} value={job}>
+            {job}
+          </Option>
+        ))}
       </Select>
       <Select
         placeholder="اقليم"
@@ -163,7 +192,11 @@ export default function FiltersBar({
         onChange={(val) => handleChange("area", val)}
         style={{ width: 180 }}
       >
-        {area.map((area, i) => <Option key={i} value={area}>{area}</Option>)}
+        {area.map((area, i) => (
+          <Option key={i} value={area}>
+            {area}
+          </Option>
+        ))}
       </Select>
       <Select
         placeholder="اختر المعهد"
@@ -172,7 +205,11 @@ export default function FiltersBar({
         onChange={(val) => handleChange("center", val)}
         style={{ width: 180 }}
       >
-        {Institute.map((c, i) => <Option key={i} value={c}>{c}</Option>)}
+        {Institute.map((c, i) => (
+          <Option key={i} value={c}>
+            {c}
+          </Option>
+        ))}
       </Select>
 
       <Select
@@ -182,7 +219,11 @@ export default function FiltersBar({
         onChange={(val) => handleChange("status", val)}
         style={{ width: 180 }}
       >
-        {surveyStatus.map((s, i) => <Option key={i} value={s}>{s}</Option>)}
+        {surveyStatus.map((s, i) => (
+          <Option key={i} value={s}>
+            {s}
+          </Option>
+        ))}
       </Select>
 
       <Text strong>عدد السجلات: {filteredData.length}</Text>
@@ -190,8 +231,8 @@ export default function FiltersBar({
       <Button
         icon={<DownloadOutlined />}
         style={{
-          backgroundColor:"#522524",
-          color:"#fff",
+          backgroundColor: "#522524",
+          color: "#fff",
           border: "1px solid #522524",
         }}
         onClick={() => setExportModalVisible(true)}
@@ -203,8 +244,8 @@ export default function FiltersBar({
       <Button
         icon={<UploadOutlined />}
         style={{
-          backgroundColor:"#522524",
-          color:"#fff",
+          backgroundColor: "#522524",
+          color: "#fff",
           border: "1px solid #522524",
         }}
         onClick={() => setImportModalVisible(true)}
@@ -221,19 +262,19 @@ export default function FiltersBar({
         footer={null}
         width={400}
       >
-        <Space direction="vertical" style={{ width: '100%' }}>
+        <Space direction="vertical" style={{ width: "100%" }}>
           <p>اختر تنسيق التصدير:</p>
-          <Button 
-            block 
-            onClick={() => handleExport('csv')}
+          <Button
+            block
+            onClick={() => handleExport("csv")}
             loading={loading}
             icon={<FileTextOutlined />}
           >
             تصدير كـ CSV
           </Button>
-          <Button 
-            block 
-            onClick={() => handleExport('excel')}
+          <Button
+            block
+            onClick={() => handleExport("excel")}
             loading={loading}
             icon={<FileTextOutlined />}
           >
@@ -250,23 +291,26 @@ export default function FiltersBar({
         footer={null}
         width={500}
       >
-        <Space direction="vertical" style={{ width: '100%' }}>
+        <Space direction="vertical" style={{ width: "100%" }}>
           <div>
             <p>اختر ملف CSV أو Excel لاستيراد البيانات:</p>
-            <Button 
-              onClick={downloadTemplate} 
-              type="dashed" 
+            <Button
+              onClick={downloadTemplate}
+              type="dashed"
               icon={<DownloadOutlined />}
               style={{ marginBottom: 16 }}
             >
               تحميل قالب نموذجي
             </Button>
           </div>
-          
+
           {uploadProgress > 0 && (
-            <Progress percent={uploadProgress} status={loading ? "active" : "success"} />
+            <Progress
+              percent={uploadProgress}
+              status={loading ? "active" : "success"}
+            />
           )}
-          
+
           <Upload.Dragger
             name="file"
             multiple={false}
